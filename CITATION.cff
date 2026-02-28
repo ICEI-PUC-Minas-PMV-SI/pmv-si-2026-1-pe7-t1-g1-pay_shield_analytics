@@ -1,29 +1,27 @@
 cff-version: 1.0.1
 message: Please cite this software using these metadata.
-title:
+title:Pesquisa e Experimentação em Sistemas de Informação - PayShield Analytics
 authors:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - name-suffix: Professor XXXX
+  - family-names:Fideles Vieira do Nascimento
+    given-names:Ítalo
+  - family-names:Roman Palhano Dutra
+    given-names:Jully Anne
+  - family-names:Morais Barcelos
+    given-names:Lucas
+  - family-names:Nunes Alves
+    given-names:Pedro Henrique 
+  - family-names:Vasquez da Silva
+    given-names:Victor Hugo 
+  - family-names:Pereira Coelho
+    given-names:Vinícius
+  - name-suffix: Professor
     affiliation: PUC Minas
-    family-names:
-    given-names:
-keywords:
+    family-names:Paiva Tizzo
+    given-names:Neil
+keywords:Fraud Detection, Digital Payments, Machine Learning, Artificial Intelligence, FinTech, Data Science.
   -
   -
 repository-code:
 license: CC-BY-4.0
 version: 1.0.0
-date-released: 2023-06-30
+date-released: 2026-06-30

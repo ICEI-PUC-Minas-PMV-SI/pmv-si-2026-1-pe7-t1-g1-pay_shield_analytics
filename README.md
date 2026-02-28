@@ -1,5 +1,9 @@
 # PayShield Analytics
 
+<p align="center">
+  <img src="docs/img/rd_payshield_logo.png" alt="logo PayShield Analytics" width="250"/>
+</p>
+
 `CURSO: Sistemas de Informação`
 
 `DISCIPLINA: Projeto - Pesquisa e Experimentação em Sistemas de Informação`

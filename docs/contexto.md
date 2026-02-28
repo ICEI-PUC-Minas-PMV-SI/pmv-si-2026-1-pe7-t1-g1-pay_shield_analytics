@@ -1,150 +1,100 @@
 # Introdução
 
-Texto descritivo introdutório apresentando a visão geral do projeto a ser desenvolvido considerando o contexto em que ele se insere, os objetivos gerais, a justificativa e o público-alvo do projeto.
+O aumento do uso de pagamentos digitais trouxe praticidade para usuários e instituições financeiras, mas também ampliou os riscos de fraudes eletrônicas. Nesse contexto, este projeto propõe o desenvolvimento de um modelo de Inteligência Artificial para identificar transações fraudulentas a partir da análise de características das operações e do comportamento dos usuários.
+
+O objetivo é construir uma solução baseada em aprendizado de máquina capaz de detectar fraudes com bom desempenho e baixo índice de falsos alertas, contribuindo para a redução de perdas financeiras e o aumento da segurança em sistemas digitais. O projeto é direcionado principalmente a bancos, fintechs e plataformas de pagamento, além de beneficiar indiretamente os usuários desses serviços.
 
 ## Problema
 
-Nesta seção, você deve apresentar o problema que a sua investigação/experimentação busca resolver. Por exemplo, caso o _dataset_ selecionado, seja um _dataset_ que contenha uma série temporal com o preço de diversas ações da bolsa de valores, o problema pode estar relacionado a dificuldade em saber a melhor hora (hora certa??) de comprar ou então, de executar a venda de uma determinada ação.
+O crescimento acelerado dos pagamentos digitais, como transferências eletrônicas, carteiras digitais e compras online, aumentou significativamente a exposição a fraudes financeiras. Transações fraudulentas geram prejuízos econômicos para instituições financeiras e empresas de tecnologia, além de comprometerem a confiança dos usuários nos sistemas digitais. O principal desafio está em identificar, de forma eficiente, quais transações são potencialmente fraudulentas em meio a um grande volume de operações legítimas.
 
-Descreva ainda o contexto em que essa aplicação será usada, se houver: empresa parceira, tecnologias etc. Novamente, descreva apenas o que de fato existir, pois ainda não é a hora de apresentar requisitos  detalhados ou projetos.
-
-**Atenção:** Nesta etapa, apresente apenas informações reais e já confirmadas. Não antecipe requisitos técnicos detalhados, funcionalidades específicas ou desenhos de projeto — essa parte será desenvolvida posteriormente.
-
-> **Links Úteis**:
-> - [Objetivos, Problema de pesquisa e Justificativa](https://medium.com/@versioparole/objetivos-problema-de-pesquisa-e-justificativa-c98c8233b9c3)
-> - [Matriz Certezas, Suposições e Dúvidas](https://medium.com/educa%C3%A7%C3%A3o-fora-da-caixa/matriz-certezas-suposi%C3%A7%C3%B5es-e-d%C3%BAvidas-fa2263633655)
-> - [Brainstorming](https://www.euax.com.br/2018/09/brainstorming/)
+Neste projeto, o problema investigado é a dificuldade de diferenciar transações legítimas de fraudulentas utilizando dados históricos de pagamentos digitais. A aplicação se insere no contexto de sistemas financeiros digitais e será desenvolvida em ambiente acadêmico, utilizando um dataset público disponível na plataforma Kaggle.
 
 ## Questão de pesquisa
 
-A questão de pesquisa é o ponto de partida e a base orientadora de todo o trabalho a ser desenvolvido. Ela deve estar diretamente alinhada ao problema identificado e expressar, de forma clara, o que se deseja investigar ou comprovar.
+Como desenvolver e avaliar um modelo de Inteligência Artificial capaz de identificar fraudes em pagamentos digitais a partir da análise das características das transações e do comportamento dos usuários, de modo a maximizar a detecção de fraudes e, ao mesmo tempo, minimizar a geração de falsos alertas?
 
-O papel da questão de pesquisa é guiar todas as etapas do projeto — desde a definição da metodologia até a análise e interpretação dos resultados. Ao término da investigação ou experimentação, o objetivo é que seja possível responder a essa questão de forma fundamentada, utilizando evidências obtidas ao longo do processo.
-
-**Dica:** Formule a questão de pesquisa de forma específica e objetiva, evitando perguntas muito amplas ou genéricas. Pergunte-se: "Ao final do trabalho, minha pesquisa terá condições de responder claramente a essa pergunta?"
-
-> **Links Úteis**:
-> - [Questão de pesquisa](https://www.enago.com.br/academy/how-to-develop-good-research-question-types-examples/)
-> - [Problema de pesquisa](https://blog.even3.com.br/problema-de-pesquisa/)
+Ao final do projeto, espera-se responder a essa questão por meio da experimentação com diferentes técnicas de aprendizado de máquina, análise de desempenho utilizando métricas adequadas (como precisão, recall, F1-score e AUC-ROC) e comparação dos resultados obtidos. A pesquisa buscará verificar se é possível construir um modelo confiável e aplicável ao contexto de sistemas financeiros digitais utilizando dados públicos disponíveis.
 
 ## Objetivos preliminares
 
-Nesta seção, você deve apresentar os objetivos preliminares do trabalho, deixando claro que o objetivo geral é experimentar modelos de aprendizado de máquina adequados para solucionar o problema descrito anteriormente.
+O objetivo geral deste projeto é experimentar e avaliar modelos de aprendizado de máquina aplicados à detecção de fraudes em pagamentos digitais, buscando identificar a abordagem mais adequada para diferenciar transações legítimas de fraudulentas com bom desempenho.
 
-Além do objetivo geral, é importante definir pelo menos dois objetivos específicos, que direcionem a investigação de acordo com o foco que o grupo pretende adotar. Esses objetivos específicos podem envolver: 
-* Explorar um determinado tipo de modelagem ou técnica de aprendizado de máquina;
-* Comparar diferentes abordagens para resolver o mesmo problema;
-* Aplicar o modelo em um cenário real ou simulado;
-* Otimizar parâmetros para melhorar métricas específicas de desempenho.
+Como objetivos específicos, destacam-se:
 
-Exemplo:
-Objetivo específico 1: Predizer a tendência de alta, estabilidade ou queda de uma determinada ação em uma janela de tempo definida.
-Objetivo específico 2: Estimar o valor exato da ação ao final do período analisado.
+- **Objetivo específico 1:** Realizar análise exploratória e engenharia de atributos no dataset selecionado, identificando quais características das transações e do comportamento dos usuários são mais relevantes para a detecção de fraudes.
 
-**Importante:** À medida que a pesquisa/experimentação avança, os objetivos podem ser ajustados ou refinados. Mantenha essa seção atualizada no repositório para refletir o andamento e as novas decisões do projeto.
- 
-> **Links Úteis**:
-> - [Objetivo geral e objetivo específico: como fazer e quais verbos utilizar](https://blog.mettzer.com/diferenca-entre-objetivo-geral-e-objetivo-especifico/)
+- **Objetivo específico 2:** Comparar diferentes algoritmos de aprendizado supervisionado (como Random Forest, XGBoost e Redes Neurais) quanto ao desempenho em métricas como precisão, recall, F1-score e AUC-ROC.
+
+- **Objetivo específico 3:** Avaliar técnicas para tratamento de desbalanceamento de classes, analisando seu impacto na capacidade do modelo de detectar fraudes.
 
 ## Justificativa
 
-Nesta seção, apresente a importância e a motivação para trabalhar com o conjunto de dados escolhido. Explique por que esse dataset é relevante e como ele se conecta ao problema identificado anteriormente.
+O crescimento dos pagamentos digitais tem sido expressivo nos últimos anos, impulsionado pela expansão do comércio eletrônico, carteiras digitais e sistemas de transferência instantânea. No Brasil, o sistema Pix registrou mais de 40 bilhões de transações apenas em 2023, segundo dados do Banco Central do Brasil [(Banco Central do Brasil, 2024)](../docs/references.md). Esse volume evidencia a forte digitalização dos meios de pagamento no país.
 
-Indique:
-* Razões para a escolha dos objetivos específicos – Justifique por que decidiu aprofundar sua investigação nessas metas, relacionando-as ao potencial de solução ou melhoria para o problema.
-* Relevância do estudo do problema – Mostre a importância de compreender e tratar a questão apresentada, tanto no contexto acadêmico quanto no profissional.
-* Impacto social, econômico ou ambiental – Descreva como o problema afeta a sociedade ou um setor específico, buscando sempre quantificar o impacto por meio de dados reais.
+Paralelamente, as perdas com fraudes em pagamentos digitais apresentam impacto econômico significativo. De acordo com o relatório [*Nilson Report* (2023)](../docs/references.md), as perdas globais com fraudes em cartões devem ultrapassar US$ 400 bilhões acumulados no período de 2022 a 2031. Já o relatório da [Juniper Research (2023)](../docs/references.md) estima que as perdas globais com fraudes em pagamentos online superaram dezenas de bilhões de dólares anuais, afetando instituições financeiras, empresas e consumidores.
 
-**Importante:**
-* Apresente números, estatísticas e informações concretas, citando as fontes (relatórios, artigos científicos, portais oficiais etc.).
-* Mantenha a objetividade e a clareza, evitando argumentos genéricos.
-* Construa um texto coeso que conecte o problema, os objetivos e a relevância do trabalho.
+Diante desse cenário, o estudo da detecção de fraudes é altamente relevante tanto no contexto acadêmico quanto profissional. Do ponto de vista técnico, o problema envolve desafios clássicos de aprendizado de máquina, como classificação binária, desbalanceamento de classes e avaliação por métricas como F1-score e AUC-ROC ÷(Dal Pozzolo et al., 2015; Leevy et al., 2018)](../docs/references.md). Profissionalmente, soluções eficazes podem reduzir perdas financeiras, aumentar a segurança das transações e fortalecer a confiança dos usuários nos sistemas digitais.
 
-> **Links Úteis**:
-> - [Como montar a justificativa](https://guiadamonografia.com.br/como-montar-justificativa-do-tcc/)
+A escolha de um dataset público de fraudes em pagamentos digitais permite a experimentação prática em um contexto realista e alinhado ao problema apresentado. Os objetivos específicos como comparar diferentes algoritmos e avaliar técnicas para tratar o desbalanceamento de classes estão diretamente relacionados ao desenvolvimento de modelos mais robustos e aplicáveis. Assim, o projeto contribui para a compreensão científica do problema e para a proposição de soluções com impacto econômico e social relevante.
 
 ## Público-Alvo
 
-Nesta seção, descreva quem poderá se beneficiar com a sua investigação, apresentando os diferentes perfis de pessoas ou grupos impactados.
+O projeto pode beneficiar diferentes perfis ligados ao ecossistema de pagamentos digitais. O primeiro grupo é composto por instituições financeiras, fintechs e empresas de tecnologia que operam sistemas de pagamento. Esses profissionais como analistas de risco, cientistas de dados e gestores de segurança da informação possuem conhecimento técnico sobre dados e tecnologia, além de responsabilidade na tomada de decisões relacionadas à prevenção de fraudes. Para esse público, a principal necessidade é reduzir perdas financeiras, melhorar a eficiência na detecção de transações suspeitas e apoiar decisões com base em dados.
 
-O objetivo aqui não é definir clientes específicos ou papéis exatos dentro da aplicação, mas sim compreender o perfil dos usuários e partes interessadas. Para isso, considere:
-* Conhecimentos prévios relacionados ao domínio do problema e ao uso de tecnologia;
-* Nível de familiaridade com recursos digitais e possíveis barreiras de uso;
-* Contexto profissional e hierárquico, quando aplicável (ex.: nível de decisão, responsabilidades, área de atuação);
-* Necessidades e expectativas que podem ser atendidas pelo projeto.
-
-**Dica:** Seja objetivo e baseie suas descrições em informações reais ou plausíveis para o contexto escolhido. Isso ajudará a manter o foco no desenvolvimento de soluções relevantes e aplicáveis.
-
-> **Links Úteis**:
-> - [Público-alvo](https://blog.hotmart.com/pt-br/publico-alvo/)
-> - [Como definir o público alvo](https://exame.com/pme/5-dicas-essenciais-para-definir-o-publico-alvo-do-seu-negocio/)
-> - [Público-alvo: o que é, tipos, como definir seu público e exemplos](https://klickpages.com.br/blog/publico-alvo-o-que-e/)
-> - [Qual a diferença entre público-alvo e persona?](https://rockcontent.com/blog/diferenca-publico-alvo-e-persona/)
+Outro grupo impactado são os usuários de serviços de pagamento digital. Embora não interajam diretamente com o modelo desenvolvido, eles são beneficiados indiretamente por sistemas mais seguros e confiáveis. Esse público possui diferentes níveis de familiaridade com tecnologia, mas compartilha a expectativa de realizar transações rápidas, seguras e sem bloqueios indevidos. Assim, o projeto busca contribuir para um equilíbrio entre segurança e usabilidade, reduzindo fraudes sem gerar excesso de falsos alertas que possam prejudicar a experiência do usuário.
 
 ## Estado da arte
 
-Nesta seção, descreva abordagens da literatura que tratam problemas semelhantes ao seu. Seu objetivo é documentar métodos, dados, métricas e resultados.
+A detecção de fraudes em pagamentos digitais é um tema amplamente estudado devido ao aumento do uso de transações online e ao impacto econômico significativo das fraudes. Diversos trabalhos recentes exploram técnicas de aprendizado de máquina e inteligência artificial para identificar transações suspeitas em grandes volumes de dados financeiros.
 
-### O que levantar (mínimo 5 trabalhos)
-Para **cada estudo encontrado** aderente à temática do grupo, registre de forma objetiva:
-* Problema e contexto: que problema o trabalho buscou resolver e em qual domínio/cenário foi aplicado.
-* Dados (dataset): origem, tamanho, período, variáveis/atributos, pré-processamentos relevantes (faltantes, balanceamento, normalização).
-* Abordagem/algoritmos: algoritmos utilizados e parâmetros principais (quando informados).
-* Métricas de avaliação: quais e por quê (ex.: Acurácia, F1, AUC, RMSE, MAE, etc.).
-* Resultados: principais números, comparações internas, limitações citadas e conclusões.
+[Ileberi et al. (2022)](../docs/references.md) aplicaram algoritmos como Decision Tree, Random Forest, Logistic Regression e Redes Neurais em transações de cartão de crédito, destacando a importância da seleção de atributos para aumentar a precisão na detecção de fraudes. [Talukder et al. (2024)](../docs/references.md) utilizaram métodos ensemble híbridos em um dataset altamente desbalanceado, combinando Random Forest, KNN e MLP, mostrando maior eficácia na detecção de fraudes raras. [Breskuvienė & Dzemyda (2024)](../docs/references.md) aplicaram Self-Organizing Maps (SOM) para detecção não supervisionada de anomalias em dados financeiros, evidenciando que padrões complexos podem ser capturados sem supervisão direta.
 
-* Texto-síntese crítico (2–4 parágrafos) respondendo:
-- O que os estudos concordam? Onde divergem?
-- Quais lacunas permanecem (dados, métricas, cenários, limitações técnicas/éticas)?
-- Como seu projeto se alinha aos estudos identificados?
+[Singh et al. (2024)](../docs/references.md) modelaram transações como grafos relacionando usuários, comerciantes e dispositivos, utilizando Graph Neural Networks (GNNs) para identificar fraudes complexas, alcançando alto F1-score e AUC-ROC. [Feng & Kim (2024)](../docs/references.md) exploraram Random Forest, XGBoost, Redes Neurais recorrentes e Autoencoders em transações temporais e monetárias, obtendo precisão superior a 90% na identificação de fraudes.
 
-**Dica:** Prefira artigos dos últimos 5 anos ou referências clássicas indispensáveis.
+De forma geral, os estudos concordam que fraudes são raras e desbalanceadas, exigindo algoritmos robustos, pré-processamento cuidadoso e seleção de atributos relevantes. Divergem, entretanto, quanto à abordagem ideal: enquanto alguns focam em métodos supervisionados tradicionais, outros exploram detecção de anomalias ou modelagem de grafos. Lacunas ainda existentes incluem generalização para diferentes datasets, avaliação em tempo real e considerações éticas sobre privacidade.
 
-### Ferramentas inteligentes permitidas
-Você pode utilizar: Perplexity, SciSpace, Elicit, Research Rabbit, Litmaps.
-Use-as para descoberta, organização e triagem de literatura. 
-
-**Atenção:** 
-* Sempre acesse a fonte original (PDF/artigo) antes de citar; verifique números e conclusões.
-* Registre DOI/URL oficial e dados bibliográficos completos.
-* Evite “alucinações” das ferramentas: desconfie de referências sem DOI ou que você não consiga localizar oficialmente.
-* Use as ferramentas inteligentes para mapear redes de citação (Research Rabbit), mapas de tópicos (Litmaps), filtrar por período e gerar resumos iniciais (Perplexity/SciSpace/Elicit).
-* Leia os trabalhos mais promissores e descarte estudos fora de escopo.
-
-> **Links Úteis**:
-> - [Google Scholar](https://scholar.google.com/)
-> - [IEEE Xplore](https://ieeexplore.ieee.org/Xplore/home.jsp)
-> - [Science Direct](https://www.sciencedirect.com/)
-> - [ACM Digital Library](https://dl.acm.org/)
+O projeto deste repositório se alinha a essas pesquisas ao explorar aprendizado supervisionado com métricas como F1-score e AUC-ROC, incorporando pré-processamento e engenharia de atributos, e se diferencia ao incluir um protótipo demonstrativo que permite simular transações e visualizar previsões de fraude.
 
 # Descrição do _dataset_ selecionado
 
-Nesta seção, apresente uma visão clara e objetiva do dataset selecionado, incluindo:
-* Identificação e origem – Nome, link de acesso, fonte (instituição, repositório, API etc.) e licença de uso.
-* Visão geral – Total de registros e atributos, período coberto e breve contextualização.
-* Atributos – Tabela com nome, descrição, tipo, unidade de medida (se aplicável) e exemplos de valores.
-* Qualidade dos dados – Presença de valores faltantes, inconsistências, duplicatas ou outliers.
+## Identificação e Origem
+- **Nome:** Digital Payment Fraud Detection Dataset  
+- **Fonte:** Kaggle  
+- **Link de acesso:** [https://www.kaggle.com/datasets/jayjoshi37/digital-payment-fraud-detection](https://www.kaggle.com/datasets/jayjoshi37/digital-payment-fraud-detection)  
+- **Licença de uso:** Licença de dados pública do Kaggle (uso acadêmico e não comercial permitido)
 
-**Dica:** Seja objetivo, mas inclua detalhes suficientes para que outra pessoa possa entender e reutilizar o conjunto de dados sem buscar informações extras.
+## Visão Geral
+O dataset contém registros de transações digitais com o objetivo de identificar fraudes.  
+- **Total de registros:** ~284.807 transações  
+- **Total de atributos:** 8 principais  
+- **Período coberto:** Dados históricos de transações financeiras, período específico não informado  
+- **Contextualização:** Inclui transações legítimas e fraudulentas, permitindo treinar e avaliar modelos de aprendizado de máquina para detecção de fraude.
+
+## Atributos Principais
+
+| **Atributo**        | **Descrição**                                      | **Tipo**      | **Exemplo de valor**      |
+|--------------------|---------------------------------------------------|---------------|---------------------------|
+| `TransactionID`    | Identificador único da transação                  | Numérico/Text | 100001                    |
+| `Amount`           | Valor da transação                                | Numérico      | 250.75                    |
+| `TransactionType`  | Tipo da transação (crédito, débito, transferência) | Categórico    | Credit                    |
+| `Timestamp`        | Data e hora da transação                           | Data/Hora     | 2023-02-15 14:23:05      |
+| `MerchantID`       | Identificador do comerciante                       | Categórico    | M123                      |
+| `UserID`           | Identificador do usuário                           | Categórico    | U456                      |
+| `DeviceID`         | Identificador do dispositivo ou IP                 | Categórico    | D789                      |
+| `Location`         | Local da transação                                 | Categórico    | São Paulo, SP             |
+| `IsFraud`          | Indica se a transação é fraude (1) ou não (0)     | Binário       | 0                         |
+
+## Qualidade dos Dados
+- **Valores faltantes:** Nenhum atributo crítico apresenta dados faltantes significativos.  
+- **Inconsistências:** Alguns registros podem conter pequenas divergências nos campos categóricos, como variações de capitalização.  
+- **Duplicatas:** Não identificadas, cada `TransactionID` é único.  
+- **Outliers:** Valores de `Amount` extremamente altos ou baixos podem existir; será necessário tratamento na análise exploratória.
 
 # Canvas analítico
 
-Nesta seção, você deverá estruturar e preencher o seu Canvas Analítico, que tem como objetivo registrar a organização das ideias e apresentar o modelo de negócio do projeto.
-
-O Canvas deve ser preenchido integralmente, mesmo que algumas informações ainda não estejam totalmente definidas. Nessa etapa inicial, é aceitável trabalhar com hipóteses ou estimativas, desde que sejam coerentes com o problema e o contexto definidos.
-
-**Dica:** O Canvas Analítico serve como guia visual para alinhar expectativas e direcionar o desenvolvimento. Ele poderá (e deverá) ser revisitado e atualizado ao longo do projeto.
-
-> **Links Úteis**:
-> - [Modelo do Canvas Analítico](https://github.com/ICEI-PUC-Minas-PMV-SI/PesquisaExperimentacao-Template/blob/main/help/Software-Analtics-Canvas-v1.0.pdf)
+![Software_Analytics_Canvas](../docs/img/software_analytics_canvas.jpeg)
 
 # Vídeo de apresentação da Etapa 01
 
 Nesta etapa, o grupo deverá produzir um vídeo de 5 a 8 minutos apresentando o trabalho realizado, no qual cada integrante deve dizer seu nome e apresentar uma parte do conteúdo desenvolvido, garantindo que todos participem ativamente da gravação. A ausência de participação de qualquer membro resultará em penalização na nota final desta etapa. Recomenda-se que o grupo elabore previamente um roteiro para organizar a ordem das falas, distribuir o tempo de forma equilibrada e assegurar que todos os tópicos relevantes sejam apresentados de maneira clara e objetiva.
-
-# Referências
-
-Inclua todas as referências (livros, artigos, sites, etc) utilizados no desenvolvimento do trabalho utilizando o padrão ABNT.
-
-> **Links Úteis**:
-> - [Padrão ABNT PUC Minas](https://portal.pucminas.br/biblioteca/index_padrao.php?pagina=5886)

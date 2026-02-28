@@ -1,4 +1,4 @@
-# TÍTULO DO PROJETO
+# PayShield Analytics
 
 `CURSO: Sistemas de Informação`
 
@@ -6,20 +6,20 @@
 
 `SEMESTRE: 7º`
 
-Descrever resumidamente, em um ou dois parágrafos, o projeto que está sendo desenvolvido.
+Este projeto tem como objetivo desenvolver um modelo de Inteligência Artificial capaz de identificar fraudes em pagamentos digitais a partir da análise de características das transações e do comportamento dos usuários. Utilizando técnicas de aprendizado de máquina supervisionado, o sistema é treinado com um dataset rotulado contendo informações como valor da transação, tipo de pagamento, horário, dispositivo e localização, tendo como variável alvo a indicação de fraude. O foco está em construir um modelo que consiga detectar a maior quantidade possível de fraudes sem gerar excesso de falsos alertas.
 
 ## Integrantes
 
-* Nome completo do aluno 1
-* Nome completo do aluno 2
-* Nome completo do aluno 3
-* Nome completo do aluno 4
-* Nome completo do aluno 5
-* Nome completo do aluno 6
+* Ítalo Fideles Vieira do Nascimento
+* Jully Anne Roman Palhano Dutra
+* Lucas Morais Barcelos
+* Pedro Henrique Nunes Alves
+* Victor Hugo Vasquez da Silva
+* Vinícius Pereira Coelho
 
 ## Orientador
 
-* Nome completo do professor 1
+* Neil Paiva Tizzo
 
 # Planejamento
 

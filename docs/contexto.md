@@ -34,7 +34,7 @@ O crescimento dos pagamentos digitais tem sido expressivo nos últimos anos, imp
 
 Paralelamente, as perdas com fraudes em pagamentos digitais apresentam impacto econômico significativo. De acordo com o relatório [*Nilson Report* (2023)](../docs/references.md), as perdas globais com fraudes em cartões devem ultrapassar US$ 400 bilhões acumulados no período de 2022 a 2031. Já o relatório da [Juniper Research (2023)](../docs/references.md) estima que as perdas globais com fraudes em pagamentos online superaram dezenas de bilhões de dólares anuais, afetando instituições financeiras, empresas e consumidores.
 
-Diante desse cenário, o estudo da detecção de fraudes é altamente relevante tanto no contexto acadêmico quanto profissional. Do ponto de vista técnico, o problema envolve desafios clássicos de aprendizado de máquina, como classificação binária, desbalanceamento de classes e avaliação por métricas como F1-score e AUC-ROC ÷(Dal Pozzolo et al., 2015; Leevy et al., 2018)](../docs/references.md). Profissionalmente, soluções eficazes podem reduzir perdas financeiras, aumentar a segurança das transações e fortalecer a confiança dos usuários nos sistemas digitais.
+Diante desse cenário, o estudo da detecção de fraudes é altamente relevante tanto no contexto acadêmico quanto profissional. Do ponto de vista técnico, o problema envolve desafios clássicos de aprendizado de máquina, como classificação binária, desbalanceamento de classes e avaliação por métricas como F1-score e AUC-ROC[(Dal Pozzolo et al., 2015; Leevy et al., 2018)](../docs/references.md). Profissionalmente, soluções eficazes podem reduzir perdas financeiras, aumentar a segurança das transações e fortalecer a confiança dos usuários nos sistemas digitais.
 
 A escolha de um dataset público de fraudes em pagamentos digitais permite a experimentação prática em um contexto realista e alinhado ao problema apresentado. Os objetivos específicos como comparar diferentes algoritmos e avaliar técnicas para tratar o desbalanceamento de classes estão diretamente relacionados ao desenvolvimento de modelos mais robustos e aplicáveis. Assim, o projeto contribui para a compreensão científica do problema e para a proposição de soluções com impacto econômico e social relevante.
 
@@ -73,17 +73,18 @@ O dataset contém registros de transações digitais com o objetivo de identific
 
 ## Atributos Principais
 
-| **Atributo**        | **Descrição**                                      | **Tipo**      | **Exemplo de valor**      |
-|--------------------|---------------------------------------------------|---------------|---------------------------|
-| `TransactionID`    | Identificador único da transação                  | Numérico/Text | 100001                    |
-| `Amount`           | Valor da transação                                | Numérico      | 250.75                    |
-| `TransactionType`  | Tipo da transação (crédito, débito, transferência) | Categórico    | Credit                    |
-| `Timestamp`        | Data e hora da transação                           | Data/Hora     | 2023-02-15 14:23:05      |
-| `MerchantID`       | Identificador do comerciante                       | Categórico    | M123                      |
-| `UserID`           | Identificador do usuário                           | Categórico    | U456                      |
-| `DeviceID`         | Identificador do dispositivo ou IP                 | Categórico    | D789                      |
-| `Location`         | Local da transação                                 | Categórico    | São Paulo, SP             |
-| `IsFraud`          | Indica se a transação é fraude (1) ou não (0)     | Binário       | 0                         |
+
+| **Categoria**       | **Atributo**          | **Tipo**       | **Exemplo**             | **Descrição**                             | **Importância para detecção de fraude**             |
+|-----------------|-----------------|-----------|-------------------|---------------------------------------|------------------------------------------------|
+| Identificador 🆔| `transaction_id`| Categórico| T00012345         | Identificador único da transação      | Usado para referência, não como feature       |
+| Financeiro 💰 | `transaction_amount`| Numérico| 150.75            | Valor da transação                     | Valores fora do padrão podem indicar fraude   |
+| Financeiro 💰| `transaction_type`  | Categórico| Débito            | Tipo (crédito, débito, transferência) | Alguns tipos apresentam maior risco           |
+| Temporal  ⏰| `transaction_hour`  | Numérico  | 23                | Hora da transação                      | Horários incomuns podem sinalizar fraude      |
+| Dispositivo/Risco 🖥️ / 📱 / ⚠️ |`ip_risk_score`| Numérico  | 0.85  | Pontuação de risco do IP               | IPs suspeitos estão associados a fraude       |
+| Comportamental 👤 | `user_id` | Categórico| U12345      | Identificador do usuário               | Histórico ajuda a detectar padrões suspeitos  |
+| Dispositivo/Risco 🖥️ / 📱 / ⚠️| `device_type`| Categórico| Mobile | Dispositivo utilizado                  | Mudanças de dispositivo podem indicar fraude  |
+| Dispositivo/Risco 🖥️ / 📱 / ⚠️ | `device_location` | Categórico| São Paulo, BR  | Local da transação  | Transações fora do padrão geográfico são suspeitas |
+| Target 🎯 | `fraud_label`      | Binário   | 0 | Indica se a transação é fraude (1) ou não (0)        | Variável alvo para o modelo                   |
 
 ## Qualidade dos Dados
 - **Valores faltantes:** Nenhum atributo crítico apresenta dados faltantes significativos.  
@@ -95,6 +96,7 @@ O dataset contém registros de transações digitais com o objetivo de identific
 
 ![Software_Analytics_Canvas](../docs/img/software_analytics_canvas.jpeg)
 
-# Vídeo de apresentação da Etapa 01
+# 🎬 Vídeo de apresentação da Etapa 01
 
-Nesta etapa, o grupo deverá produzir um vídeo de 5 a 8 minutos apresentando o trabalho realizado, no qual cada integrante deve dizer seu nome e apresentar uma parte do conteúdo desenvolvido, garantindo que todos participem ativamente da gravação. A ausência de participação de qualquer membro resultará em penalização na nota final desta etapa. Recomenda-se que o grupo elabore previamente um roteiro para organizar a ordem das falas, distribuir o tempo de forma equilibrada e assegurar que todos os tópicos relevantes sejam apresentados de maneira clara e objetiva.
+Este vídeo apresenta a primeira etapa do projeto: **definição do contexto e levantamento de dados.** Mostramos como estruturamos o problema e coletamos as informações essenciais para análise de fraude em pagamentos digitais.
+

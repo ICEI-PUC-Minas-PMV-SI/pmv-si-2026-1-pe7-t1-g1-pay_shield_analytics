@@ -22,7 +22,7 @@ O objetivo geral deste projeto é experimentar e avaliar modelos de aprendizado 
 
 Como objetivos específicos, destacam-se:
 
-- **Objetivo específico 1:** Realizar análise exploratória e engenharia de atributos no dataset selecionado, identificando quais características das transações e do comportamento dos usuários são mais relevantes para a detecção de fraudes.
+- **Objetivo específico 1:** Identificar quais características das transações e do comportamento dos usuários são mais relevantes para a detecção de fraudes.
 
 - **Objetivo específico 2:** Comparar diferentes algoritmos de aprendizado supervisionado (como Random Forest, XGBoost e Redes Neurais) quanto ao desempenho em métricas como precisão, recall, F1-score e AUC-ROC.
 

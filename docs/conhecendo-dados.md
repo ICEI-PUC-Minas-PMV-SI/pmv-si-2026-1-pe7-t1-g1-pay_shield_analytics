@@ -130,6 +130,98 @@ A seguir, são apresentados os histogramas e boxplots das variáveis numéricas 
 - **Histograma**: Demonstra que o dataset é desbalanceado, com poucas transações fraudulentas (`1`) em relação às não fraudulentas (`0`).  
 - **Boxplot**: Mostra claramente a desigualdade de distribuição entre transações não fraudulentas e fraudulentas.
 
+#### 📦 Análise Comparativa por Classe (Boxplots)
+
+A seguir, são apresentados os boxplots das variáveis numéricas segmentados por classe (**Não Fraude** vs **Fraude**). Essa visualização permite comparar diretamente o comportamento das distribuições entre os dois grupos e identificar variáveis com maior poder discriminativo.
+
+ ![boxplot](../docs/plots/boxplot_classe.png)
+
+---
+
+**1. `transaction_amount`**
+
+* As distribuições entre fraude e não fraude são relativamente semelhantes em dispersão.
+* No entanto, transações fraudulentas tendem a apresentar uma leve concentração em valores mais altos.
+* A presença de outliers em ambas as classes indica que valores extremos, isoladamente, não são suficientes para distinguir fraude.
+
+---
+
+**2. `account_age_days`**
+
+* Contas associadas a fraudes tendem a ser ligeiramente mais novas (menor idade mediana).
+* Contas mais antigas aparecem com maior frequência em transações legítimas.
+* Isso sugere que contas recentes podem representar maior risco.
+
+---
+
+**3. `transaction_hour`**
+
+* A distribuição é bastante semelhante entre as classes.
+* Não há um padrão forte de horário que diferencie claramente fraudes de transações legítimas.
+* Apesar disso, pequenas variações podem ser exploradas em combinação com outras variáveis.
+
+---
+
+**4. `previous_failed_attempts`**
+
+* Transações fraudulentas apresentam maior número de tentativas falhas anteriores.
+* A mediana e a dispersão são mais elevadas na classe de fraude.
+* Essa variável se destaca como um forte indicador de comportamento suspeito.
+
+---
+
+**5. `avg_transaction_amount`**
+
+* Usuários envolvidos em fraudes tendem a possuir médias de transações ligeiramente mais altas.
+* Há maior variabilidade na classe de fraude.
+* Pode indicar perfis com movimentações financeiras mais agressivas ou inconsistentes.
+
+---
+
+**6. `is_international`**
+
+* Transações fraudulentas apresentam maior proporção de operações internacionais (`1`).
+* Transações não fraudulentas são predominantemente nacionais (`0`).
+* Essa variável possui forte potencial discriminativo, mesmo sendo binária.
+
+---
+
+**7. `ip_risk_score`**
+
+* A classe de fraude apresenta valores mais elevados de score de risco.
+* A mediana é superior e há maior concentração próxima de valores altos (próximo de 1).
+* Indica forte correlação entre risco do IP e ocorrência de fraude.
+
+---
+
+**8. `login_attempts_last_24h`**
+
+* Usuários com fraudes tendem a apresentar mais tentativas de login nas últimas 24h.
+* A distribuição é mais espalhada na classe fraudulenta.
+* Pode indicar tentativas de acesso indevido ou ataques automatizados.
+
+---
+
+**9. `fraud_label`**
+
+* A separação entre classes é naturalmente binária (0 vs 1).
+* Reforça o desbalanceamento do dataset, com predominância de transações não fraudulentas.
+* Esse fator deve ser considerado na modelagem (ex: uso de técnicas de balanceamento).
+
+---
+
+### 🔎 Conclusão Geral
+
+A análise dos boxplots por classe revela que algumas variáveis possuem maior poder de diferenciação entre transações fraudulentas e legítimas, especialmente:
+
+* `previous_failed_attempts`
+* `is_international`
+* `ip_risk_score`
+* `login_attempts_last_24h`
+
+Essas variáveis são fortes candidatas para modelos preditivos de fraude, enquanto outras, como `transaction_hour` e `transaction_amount`, podem ter maior valor quando combinadas com múltiplos fatores.
+
+
 ### 💳 Comparando transações fraudulentas vs. legítimas
 Neste tópico, realizamos uma análise exploratória das transações, comparando visualmente os padrões de transações legítimas e fraudulentas por meio de contagens, histogramas e boxplots interativos.
 

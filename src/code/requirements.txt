@@ -5,3 +5,4 @@ seaborn
 scikit-learn
 plotly
 kagglehub
+itables

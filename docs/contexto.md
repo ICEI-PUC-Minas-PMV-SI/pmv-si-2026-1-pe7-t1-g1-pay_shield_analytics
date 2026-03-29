@@ -72,6 +72,23 @@ Lacunas identificadas na literatura incluem: (i) a generalização dos modelos p
 
 O projeto deste repositório se alinha a essas pesquisas ao explorar aprendizado supervisionado com métricas como F1-score e AUC-ROC, incorporando pré-processamento e engenharia de atributos, e se diferencia ao: (i) utilizar um dataset público reprodutível de pagamentos digitais; (ii) comparar sistematicamente diferentes algoritmos e técnicas de tratamento de desbalanceamento; e (iii) incluir um protótipo demonstrativo que permite simular transações e visualizar previsões de fraude, aproximando o modelo acadêmico de um cenário aplicável.
 
+### Dimensão Ética
+A implementação de modelos de Inteligência Artificial para a detecção de fraudes financeiras exige uma análise rigorosa da sua dimensão ética, especialmente no que tange à privacidade, segurança, equidade e aos impactos diretos na vida dos usuários. Neste contexto, as seguintes questões são fundamentais:
+
+LGPD e Sensibilidade dos Dados: A base de dados utilizada para o treinamento e a operação de modelos antifraude lida com informações altamente sensíveis. O tratamento de dados financeiros e comportamentais está diretamente submetido à Lei Geral de Proteção de Dados Pessoais (LGPD). Tais dados revelam padrões de consumo, poder aquisitivo e até mesmo a rotina de localização dos usuários. Portanto, o projeto deve estar alinhado com o princípio da minimização dos dados (utilizando apenas o estritamente necessário para o modelo), garantindo a transparência com o usuário e a adoção de medidas de segurança robustas para evitar o vazamento dessas informações sensíveis.
+
+Possibilidade de Identificação Indireta dos Usuários: Mesmo ao utilizar datasets em que os identificadores diretos (como nome e CPF) foram removidos, existe um risco contínuo de identificação indireta (ou reidentificação). O cruzamento de metadados — como o valor específico de uma transação, o horário frequente das compras, a geolocalização e o tipo de dispositivo — pode formar uma "impressão digital" única, permitindo descobrir quem é o usuário por trás da transação. É imprescindível considerar técnicas de anonimização mais profundas e garantir que a privacidade dos titulares não seja comprometida.
+
+Vieses do Modelo (Bias): Modelos baseados em aprendizado de máquina aprendem a partir de dados históricos, que muitas vezes contêm desigualdades sociais e econômicas enraizadas. Existe o perigo de o algoritmo desenvolver vieses, associando erroneamente maiores riscos de fraude a características demográficas específicas, como pessoas de determinadas regiões periféricas, de faixas de renda menores ou de idades específicas. Isso resultaria em um modelo discriminatório. Para mitigar esse problema, é necessário monitorar constantemente as métricas de equidade (fairness) e realizar auditorias no algoritmo para evitar punições injustas a grupos vulneráveis.
+
+Efeitos de Falsos Positivos e Falsos Negativos no Contexto Financeiro: As decisões automatizadas do modelo têm consequências imediatas no mundo real, e o desbalanceamento das previsões gera impactos éticos severos:
+
+Falsos Positivos (Transações legítimas bloqueadas): Causam extremo constrangimento e frustração. Um bloqueio indevido de um cartão ou conta pode impedir o usuário de realizar compras essenciais, pagar por serviços médicos em uma emergência ou se alimentar durante uma viagem, o que pode até gerar ações judiciais por danos morais contra a instituição.
+
+Falsos Negativos (Fraudes não detectadas): Quando o modelo falha em proteger o cliente, o resultado é o prejuízo financeiro direto. Além de lesar o patrimônio do usuário e da instituição financeira, os falsos negativos acabam financiando e encorajando o ecossistema criminoso.
+
+O desenvolvimento deste modelo, portanto, não é apenas um desafio técnico para otimizar métricas estatísticas, mas também um compromisso ético de calibrar o sistema para proteger o patrimônio do cliente sem restringir injustamente sua liberdade financeira e de consumo.
+
 # Descrição do _dataset_ selecionado
 
 ## Identificação e Origem

@@ -8,23 +8,23 @@ O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de
 
 **Colunas do dataset:**
 
-| Coluna                    | Tipo       | Descrição                                     |
-|----------------------------|------------|-----------------------------------------------|
-| `transaction_id`           | numérica   | ID único da transação                          |
-| `user_id`                  | numérica   | ID do usuário                                  |
-| `transaction_amount`       | numérica   | Valor da transação                             |
-| `transaction_type`         | categórica | Tipo de transação                              |
-| `payment_mode`             | categórica | Método de pagamento                            |
-| `device_type`              | categórica | Tipo de dispositivo utilizado                  |
-| `device_location`          | categórica | Localização do dispositivo                     |
-| `account_age_days`         | numérica   | Idade da conta em dias                          |
-| `transaction_hour`         | numérica   | Hora da transação                               |
-| `previous_failed_attempts` | numérica   | Número de tentativas falhas anteriores         |
-| `avg_transaction_amount`   | numérica   | Valor médio das transações anteriores          |
-| `is_international`         | categórica | Indica se a transação é internacional         |
-| `ip_risk_score`            | numérica   | Score de risco associado ao IP                 |
-| `login_attempts_last_24h`  | numérica   | Tentativas de login nas últimas 24 horas      |
-| `fraud_label`              | categórica | Indicador de fraude (0 = não, 1 = fraudulenta)|
+| Coluna                    | Tipo       | Descrição                                     |  Exemplo       |
+|----------------------------|------------|-----------------------------------------------|------------|
+| `transaction_id`           | numérica   | ID único da transação                          |	T1.       |
+| `user_id`                  | numérica   | ID do usuário                                  |	U3756     |
+| `transaction_amount`       | numérica   | Valor da transação                             |18758.28   |
+| `transaction_type`         | categórica | Tipo de transação                              |Transfer   |
+| `payment_mode`             | categórica | Método de pagamento                            |	UPI       |
+| `device_type`              | categórica | Tipo de dispositivo utilizado                  |	Web       |
+| `device_location`          | categórica | Localização do dispositivo                     |	Hyderabad |
+| `account_age_days`         | numérica   | Idade da conta em dias                          | 895	     |
+| `transaction_hour`         | numérica   | Hora da transação                               | 14	      |
+| `previous_failed_attempts` | numérica   | Número de tentativas falhas anteriores         |  1        |
+| `avg_transaction_amount`   | numérica   | Valor médio das transações anteriores          | 25535.84  |
+| `is_international`         | categórica | Indica se a transação é internacional         |  0         |
+| `ip_risk_score`            | numérica   | Score de risco associado ao IP                 |  0.718	   |
+| `login_attempts_last_24h`  | numérica   | Tentativas de login nas últimas 24 horas      |  4         | 
+| `fraud_label`              | categórica | Indicador de fraude (0 = não, 1 = fraudulenta)|   0.       |
 
 #### 📊 Estatísticas Descritivas do Dataset
 
@@ -129,6 +129,41 @@ A seguir, são apresentados os histogramas e boxplots das variáveis numéricas 
  ![fraud_label](../docs/plots/distribuicao_boxplot_fraud_label.png)
 - **Histograma**: Demonstra que o dataset é desbalanceado, com poucas transações fraudulentas (`1`) em relação às não fraudulentas (`0`).  
 - **Boxplot**: Mostra claramente a desigualdade de distribuição entre transações não fraudulentas e fraudulentas.
+
+### 💳 Comparando transações fraudulentas vs. legítimas
+Neste tópico, realizamos uma análise exploratória das transações, comparando visualmente os padrões de transações legítimas e fraudulentas por meio de contagens, histogramas e boxplots interativos.
+
+# 🛡️ Análise de Fraude por Meio de Pagamento
+
+## 📊 Resumo dos Achados (Ranking de Risco)
+
+A tabela abaixo consolida o volume de transações e a respectiva incidência de fraudes, ordenada pelo **nível de risco (Taxa %)**:
+
+| Meio de Pagamento | Total de Transações | Qtd. Legítimas | Qtd. de Fraudes | Taxa de Fraude (%) | Status de Risco |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **Card (Cartão)** | 1.912 | 1.777 | 135 | **7.06%** | 🚨 Crítico |
+| **NetBanking** | 1.862 | 1.742 | 120 | **6.44%** | ⚠️ Alerta |
+| **UPI** | 1.874 | 1.754 | 120 | **6.40%** | ⚠️ Alerta |
+| **Wallet** | 1.852 | 1.738 | 114 | **6.16%** | ✅ Monitorado |
+
+---
+
+## 🔎 Insights e Análise Crítica
+
+1.  **Vulnerabilidade no Crédito (Card):** O método via cartão apresentou a maior taxa de fraude (7.06%). Segundo dados do [Mapa da Fraude da ClearSale](../docs/references.md), o cartão de crédito continua sendo o principal alvo no Brasil, com um ticket médio de fraude que ultrapassou R$ 1.000,00 em 2025. Isso exige camadas de autenticação mais robustas, como o protocolo 3DS.
+2.  **Confiabilidade Estatística:** O volume de transações entre os métodos é extremamente equilibrado, garantindo que as taxas calculadas refletem o comportamento real de cada canal, e não distorções por baixo volume de dados.
+3.  **Segurança em Carteiras Digitais:** O método **Wallet** obteve o melhor desempenho relativo (6.16%). Isso reforça a tendência global apontada pela [Juniper Research](../docs/references.md), onde carteiras digitais com biometria e tokenização oferecem uma jornada de compra mais segura.
+
+---
+
+## 📈 Contexto de Mercado (Benchmarks)
+
+As taxas identificadas nesta análise (entre 6.1% e 7.1%) estão consideravelmente acima do que o mercado financeiro considera ideal para uma operação saudável.
+
+* **Padrão de Mercado:** De acordo com o [E-Commerce Brasil](../docs/references.md), setores de varejo digital buscam manter suas taxas de tentativa de fraude entre **2% e 3%**.
+* **Risco Operacional:** Índices acima de 5% costumam disparar alertas em gateways de pagamento e adquirentes. Manter a taxa próxima aos benchmarks de 2-3% é essencial para evitar multas das bandeiras e garantir a rentabilidade do negócio, conforme monitorado pela [Serasa Experian](../docs/references.md).
+
+---
 
 #### 🔗 Análise de Correlação entre Variáveis Numéricas
 

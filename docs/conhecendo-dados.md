@@ -154,6 +154,8 @@ A tabela abaixo consolida o volume de transações e a respectiva incidência de
 2.  **Confiabilidade Estatística:** O volume de transações entre os métodos é extremamente equilibrado, garantindo que as taxas calculadas refletem o comportamento real de cada canal, e não distorções por baixo volume de dados.
 3.  **Segurança em Carteiras Digitais:** O método **Wallet** obteve o melhor desempenho relativo (6.16%). Isso reforça a tendência global apontada pela [Juniper Research](../docs/references.md), onde carteiras digitais com biometria e tokenização oferecem uma jornada de compra mais segura.
 
+![Grafico Transacoes Fraude por Tipo](../docs/img/divisao_porcentual_transacoes.png)
+
 ---
 
 ## 📈 Contexto de Mercado (Benchmarks)

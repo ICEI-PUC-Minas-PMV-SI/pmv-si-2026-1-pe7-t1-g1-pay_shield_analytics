@@ -10,7 +10,7 @@ O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de
 
 | Coluna                    | Tipo       | Descrição                                     |  Exemplo       |
 |----------------------------|------------|-----------------------------------------------|------------|
-| `transaction_id`           | numérica   | ID único da transação                          |	T1.       |
+| `transaction_id`           | numérica   | ID único da transação                          |	T1       |
 | `user_id`                  | numérica   | ID do usuário                                  |	U3756     |
 | `transaction_amount`       | numérica   | Valor da transação                             |18758.28   |
 | `transaction_type`         | categórica | Tipo de transação                              |Transfer   |
@@ -222,12 +222,12 @@ A análise dos boxplots por classe revela que algumas variáveis possuem maior p
 Essas variáveis são fortes candidatas para modelos preditivos de fraude, enquanto outras, como `transaction_hour` e `transaction_amount`, podem ter maior valor quando combinadas com múltiplos fatores.
 
 
-### 💳 Comparando transações fraudulentas vs. legítimas
-Neste tópico, realizamos uma análise exploratória das transações, comparando visualmente os padrões de transações legítimas e fraudulentas por meio de contagens, histogramas e boxplots interativos.
+## 💳 Comparando transações fraudulentas vs. legítimas
+Neste tópico, realizamos uma análise exploratória das transações, comparando visualmente os padrões de transações legítimas e fraudulentas por meio de contagens.
 
-# 🛡️ Análise de Fraude por Meio de Pagamento
+## 🛡️ Análise de Fraude por Meio de Pagamento
 
-## 📊 Resumo dos Achados (Ranking de Risco)
+#### 📊 Resumo dos Achados (Ranking de Risco)
 
 A tabela abaixo consolida o volume de transações e a respectiva incidência de fraudes, ordenada pelo **nível de risco (Taxa %)**:
 
@@ -238,9 +238,9 @@ A tabela abaixo consolida o volume de transações e a respectiva incidência de
 | **UPI** | 1.874 | 1.754 | 120 | **6.40%** | ⚠️ Alerta |
 | **Wallet** | 1.852 | 1.738 | 114 | **6.16%** | ✅ Monitorado |
 
----
 
-## 🔎 Insights e Análise Crítica
+
+#### 🔎 Insights e Análise Crítica
 
 1.  **Vulnerabilidade no Crédito (Card):** O método via cartão apresentou a maior taxa de fraude (7.06%). Segundo dados do [Mapa da Fraude da ClearSale](../docs/references.md), o cartão de crédito continua sendo o principal alvo no Brasil, com um ticket médio de fraude que ultrapassou R$ 1.000,00 em 2025. Isso exige camadas de autenticação mais robustas, como o protocolo 3DS.
 2.  **Confiabilidade Estatística:** O volume de transações entre os métodos é extremamente equilibrado, garantindo que as taxas calculadas refletem o comportamento real de cada canal, e não distorções por baixo volume de dados.
@@ -248,9 +248,9 @@ A tabela abaixo consolida o volume de transações e a respectiva incidência de
 
 ![Grafico Transacoes Fraude por Tipo](../docs/img/divisao_porcentual_transacoes.png)
 
----
 
-## 📈 Contexto de Mercado (Benchmarks)
+
+#### 📈 Contexto de Mercado (Benchmarks)
 
 As taxas identificadas nesta análise (entre 6.1% e 7.1%) estão consideravelmente acima do que o mercado financeiro considera ideal para uma operação saudável.
 
@@ -268,6 +268,8 @@ Para compreender melhor as relações entre as variáveis numéricas do dataset,
 - Valores próximos de **0** indicam pouca ou nenhuma correlação entre as variáveis.
 
 ![matriz_correlacao](../docs/plots/matriz_correlacao_variaceis_numericas.png)
+
+Os resultados obtidos na matriz de correlação indicam que não há evidências de correlação linear relevante entre as variáveis analisadas, uma vez que os coeficientes apresentam valores próximos de zero. Dessa forma, conclui-se que as variáveis são, em grande parte, independentes do ponto de vista linear.
 
 ## 🔎 Descrição dos achados
 

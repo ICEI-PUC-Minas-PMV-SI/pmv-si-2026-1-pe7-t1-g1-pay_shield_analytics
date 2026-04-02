@@ -48,10 +48,10 @@ O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de
 |-------------------|--------|-------------|------------|--------------|----------------|
 | transaction_id     | object | T1          | 1          | 0.01%        | 7500           |
 | user_id            | object | U1247       | 6          | 0.08%        | 5106           |
-| transaction_type   | object | Payment     | 2511       | 33.48%       | 3              |
-| payment_mode       | object | Card        | 1912       | 25.49%       | 4              |
-| device_type        | object | Web         | 2537       | 33.83%       | 3              |
-| device_location    | object | Hyderabad   | 1614       | 21.52%       | 5              |
+| transaction_type   | object | Payment     | 2511       | 33.48%       | 3 (Payment, Transfer, Withdrawal)              |
+| payment_mode       | object | Card        | 1912       | 25.49%       | 4 (Card, UPI, NetBanking, Wallet)              |
+| device_type        | object | Web         | 2537       | 33.83%       | 3 (Web, Mobile, Tablet)              |
+| device_location    | object | Hyderabad   | 1614       | 21.52%       | 5 (Hyderabad, Mumbai, Delhi, Bangalore, Chennai)              |
 
 #### 🔍📈 Analisando Outliers com IQR
 
@@ -85,50 +85,50 @@ A seguir, são apresentados os histogramas e boxplots das variáveis numéricas 
 
 ---
 
-**1. `transaction_amount`** 
+**1. `transaction_amount`**
  ![transaction_amount](../docs/plots/distribuicao_boxplot_transaction_amount.png)
-- **Histograma**: Mostra que a maioria das transações se concentra em valores médios, com alguns valores muito altos que representam outliers potenciais.  
-- **Boxplot**: Destaca a presença de transações extremas, que podem indicar comportamento atípico ou possível fraude.
+- **Histograma**: A distribuição é aproximadamente uniforme entre R$ 50 e R$ 49.985, com mediana de R$ 24.715 e desvio padrão de R$ 14.434, indicando ampla dispersão nos valores.
+- **Boxplot**: Não apresenta outliers pelo critério IQR, confirmando que os valores estão dentro de um intervalo esperado para o dataset.
 
-**2. `account_age_days`**  
+**2. `account_age_days`**
  ![account_age_days](../docs/plots/distribuicao_boxplot_account_age_days.png)
-- **Histograma**: A distribuição apresenta grande concentração em contas de idade média, com poucas contas muito novas ou muito antigas.  
-- **Boxplot**: Visualiza esses extremos, que podem ser relevantes para padrões de risco.
+- **Histograma**: Distribuição uniforme entre 10 e 1.999 dias, com mediana de 1.018 dias (~2,8 anos) e média próxima (1.006 dias), indicando simetria.
+- **Boxplot**: Sem outliers detectados pelo IQR. A amplitude total (10 a 1.999 dias) mostra que o dataset abrange desde contas muito recentes até contas com mais de 5 anos.
 
-**3. `transaction_hour`**  
+**3. `transaction_hour`**
  ![transaction_hour](../docs/plots/distribuicao_boxplot_transaction_hour.png)
-- **Histograma**: Indica que a maior parte das transações ocorre em determinados horários do dia, mostrando padrões de uso.  
-- **Boxplot**: Permite identificar se existem transações fora do horário comum.
+- **Histograma**: Distribuição ao longo das 24 horas (0 a 23), com moda na hora 3 (madrugada) e mediana às 11h. A média de 11,44h sugere distribuição relativamente uniforme.
+- **Boxplot**: Sem outliers. O intervalo interquartil (5h a 18h) cobre a maior parte do período diurno.
 
-**4. `previous_failed_attempts`**  
+**4. `previous_failed_attempts`**
  ![previous_failed_attempts](../docs/plots/distribuicao_boxplot_failed_attempts.png)
-- **Histograma**: Mostra que a maioria das transações ocorre com poucos ou nenhum histórico de tentativas falhas.  
-- **Boxplot**: Destaca usuários com muitas tentativas falhas, possíveis indicadores de risco.
+- **Histograma**: Valores discretos entre 0 e 4, com moda em 4 tentativas e mediana em 2. A média de 2,01 indica distribuição equilibrada entre os valores possíveis.
+- **Boxplot**: Sem outliers pelo IQR. A variável apresenta intervalo limitado (0-4), o que sugere que foi gerada com restrição de domínio.
 
-**5. `avg_transaction_amount`**  
+**5. `avg_transaction_amount`**
  ![avg_transaction_amount](../docs/plots/distribuicao_boxplot_avg_transaction_amount.png)
-- **Histograma**: Apresenta a média das transações por usuário, concentrada em valores médios com algumas altas variações.  
-- **Boxplot**: Evidencia outliers, indicando usuários com comportamento de transação atípico.
+- **Histograma**: Distribuição entre R$ 102 e R$ 29.994, com mediana de R$ 15.074 e desvio padrão de R$ 8.597. A moda (R$ 2.121) é significativamente menor que a mediana, indicando concentração em valores mais baixos.
+- **Boxplot**: Sem outliers pelo IQR, apesar da amplitude. O intervalo interquartil (R$ 7.725 a R$ 22.573) abrange a maior parte dos registros.
 
-**6. `is_international`**  
+**6. `is_international`**
  ![is_international](../docs/plots/distribuicao_boxplot_is_international.png)
-- **Histograma**: A grande maioria das transações é nacional (`0`), com poucas internacionais (`1`).  
-- **Boxplot**: Mostra a diferença de escala entre transações nacionais e internacionais, reforçando o desbalanceamento.
+- **Histograma**: Variável binária com forte desbalanceamento — apenas 10% das transações são internacionais (média = 0,10). A moda é 0 (transação nacional).
+- **Boxplot**: Os valores `1` são detectados como outlrs pelo IQR, o que é um artefato esperado em variáveis binárias desbalanceadas e não indica anomalia real.
 
-**7. `ip_risk_score`**  
+**7. `ip_risk_score`**
  ![ip_risk_score](../docs/plots/distribuicao_boxplot_ip_risk_score.png)
-- **Histograma**: Indica que a maioria das transações possui score de risco moderado, com alguns valores extremos próximos de 1.  
-- **Boxplot**: Permite visualizar os casos de risco alto, que podem estar associados a fraudes.
+- **Histograma**: Distribuição uniforme entre 0 e 1, com mediana de 0,502 e média de 0,505, indicando simetria quase perfeita. A moda (0,171) sugere leve concentração em scores baixos.
+- **Boxplot**: Sem outliers pelo IQR. O intervalo interquartil (0,257 a 0,759) cobre ampla faixa de risco.
 
-**8. `login_attempts_last_24h`**  
+**8. `login_attempts_last_24h`**
  ![login_attempts_last_24h](../docs/plots/distribuicao_boxplot_login_attempts_last_24.png)
-- **Histograma**: Mostra que a maioria dos usuários realiza poucas tentativas de login nas últimas 24h, com alguns casos extremos.  
-- **Boxplot**: Evidencia usuários com muitas tentativas, que podem representar comportamento suspeito.
+- **Histograma**: Valores discretos entre 1 e 9, com mediana em 5 e moda em 1 tentativa. A média de 4,99 e o desvio padrão de 2,59 indicam dispersão considerável.
+- **Boxplot**: Sem outliers pelo IQR. A distribuição abrange todo o intervalo de forma relativamente uniforme.
 
-**9. `fraud_label`**  
+**9. `fraud_label`**
  ![fraud_label](../docs/plots/distribuicao_boxplot_fraud_label.png)
-- **Histograma**: Demonstra que o dataset é desbalanceado, com poucas transações fraudulentas (`1`) em relação às não fraudulentas (`0`).  
-- **Boxplot**: Mostra claramente a desigualdade de distribuição entre transações não fraudulentas e fraudulentas.
+- **Histograma**: Dataset fortemente desbalanceado — apenas 6,5% das transações são fraudulentas (489 de 7.500). A moda é 0 (não fraude), com média de 0,065.
+- **Boxplot**: Os valores `1` (fraude) são detectados como outliers pelo IQR, o que é artefato da natureza binária e desbalanceada da variável, não uma anomalia.
 
 #### 📦 Análise Comparativa por Classe (Boxplots)
 
@@ -223,7 +223,12 @@ Essas variáveis são fortes candidatas para modelos preditivos de fraude, enqua
 
 
 ## 💳 Comparando transações fraudulentas vs. legítimas
-Neste tópico, realizamos uma análise exploratória das transações, comparando visualmente os padrões de transações legítimas e fraudulentas por meio de contagens.
+
+Neste tópico, realizamos uma análise exploratória das transações, comparando visualmente os padrões de transações legítimas e fraudulentas por meio de contagens e proporções.
+
+Do total de **7.500 transações**, apenas **489 (6,52%)** são fraudulentas, enquanto **7.011 (93,48%)** são legítimas. Esse desbalanceamento significativo é um fator importante a ser considerado tanto na interpretação dos dados quanto na futura modelagem preditiva.
+
+As subseções a seguir detalham a comparação por diferentes dimensões: meio de pagamento, tipo de transação, tipo de dispositivo e localização.
 
 ## 🛡️ Análise de Fraude por Meio de Pagamento
 
@@ -257,9 +262,11 @@ As taxas identificadas nesta análise (entre 6.1% e 7.1%) estão consideravelmen
 * **Padrão de Mercado:** De acordo com o [E-Commerce Brasil](../docs/references.md), setores de varejo digital buscam manter suas taxas de tentativa de fraude entre **2% e 3%**.
 * **Risco Operacional:** Índices acima de 5% costumam disparar alertas em gateways de pagamento e adquirentes. Manter a taxa próxima aos benchmarks de 2-3% é essencial para evitar multas das bandeiras e garantir a rentabilidade do negócio, conforme monitorado pela [Serasa Experian](../docs/references.md).
 
+> **Nota sobre dados sintéticos:** É importante ressaltar que o dataset utilizado é **sintético**, ou seja, as taxas de fraude observadas (6-7%) foram definidas durante a geração dos dados e não necessariamente refletem a realidade de operações financeiras reais. A comparação com benchmarks de mercado serve como **referência contextual** para interpretar a magnitude dos valores, mas não deve ser utilizada para inferir conclusões sobre cenários reais de produção. A natureza sintética dos dados também explica a ausência total de valores nulos, a distribuição uniforme de algumas variáveis e o equilíbrio no volume de transações entre meios de pagamento.
+
 ---
 
-#### 🔗 Análise de Correlação entre Variáveis Numéricas
+## 🔗 Análise de Correlação entre Variáveis Numéricas
 
 Para compreender melhor as relações entre as variáveis numéricas do dataset, construímos uma **matriz de correlação**, que mostra a intensidade e direção das associações entre as variáveis.
 
@@ -269,27 +276,26 @@ Para compreender melhor as relações entre as variáveis numéricas do dataset,
 
 ![matriz_correlacao](../docs/plots/matriz_correlacao_variaceis_numericas.png)
 
-Os resultados obtidos na matriz de correlação indicam que não há evidências de correlação linear relevante entre as variáveis analisadas, uma vez que os coeficientes apresentam valores próximos de zero. Dessa forma, conclui-se que as variáveis são, em grande parte, independentes do ponto de vista linear.
+Os resultados obtidos na matriz de correlação indicam que a maioria das variáveis apresenta correlação linear fraca entre si, com coeficientes próximos de zero. A exceção mais notável é o par `transaction_amount` e `avg_transaction_amount`, que apresenta correlação positiva leve, indicando que usuários com histórico de transações altas tendem a realizar transações atuais de valores mais elevados. Variáveis de risco como `ip_risk_score` e `is_international` apresentam associação fraca com `fraud_label`, sugerindo que, embora exista relação, ela não é puramente linear — o que reforça a necessidade de modelos mais complexos para capturar esses padrões.
 
-## 🔎 Descrição dos achados
+## 🔎 Resumo Executivo dos Achados
 
-A partir da análise exploratória realizada no dataset **Digital Payment Fraud Detection**, os seguintes achados se destacam:
+A análise exploratória do dataset **Digital Payment Fraud Detection** permite consolidar os seguintes pontos-chave para orientar a etapa de modelagem preditiva:
 
-1. **Centralidade dos dados**  
-   - A média e a mediana de `transaction_amount` são próximas (≈ 24.813 e 24.715), indicando uma distribuição relativamente simétrica, embora a moda seja maior (36.588), sugerindo que algumas transações “padrão” se repetem com valores mais altos.
-   - Para `account_age_days`, a média é 1.006 dias e a mediana 1.018, indicando que a maioria das contas tem idade próxima à média, mas com algumas contas muito novas ou muito antigas, que podem ser consideradas outliers.
+1. **Variáveis com maior poder discriminativo para fraude:**
+   - `previous_failed_attempts` — transações fraudulentas apresentam mais tentativas falhas anteriores.
+   - `is_international` — proporção de transações internacionais é significativamente maior na classe de fraude.
+   - `ip_risk_score` — scores de risco mais elevados estão concentrados nas transações fraudulentas.
+   - `login_attempts_last_24h` — usuários com fraudes tendem a ter mais tentativas de login recentes.
 
-2. **Dispersão e outliers**  
-   - O desvio padrão de `transaction_amount` (≈ 14.434) mostra uma variação significativa entre os valores, o que é esperado em transações digitais.
-   - Quartis e boxplots indicam que existem transações atípicas com valores mais altos que o normal, possíveis candidatos a fraude.
+2. **Variáveis com menor poder discriminativo isolado:**
+   - `transaction_hour` e `transaction_amount` não apresentam diferenças expressivas entre classes quando analisadas individualmente, mas podem agregar valor em combinação com outras variáveis.
 
-3. **Relações entre variáveis**  
-   - Algumas variáveis financeiras, como `avg_transaction_amount` e `transaction_amount`, apresentam correlação moderada positiva, indicando que usuários com transações anteriores altas tendem a realizar transações atuais altas.
-   - Variáveis de risco como `ip_risk_score` e `is_international` apresentam associação com `fraud_label`, sugerindo que transações internacionais ou com IPs suspeitos têm maior chance de fraude.
-   - Variáveis categóricas como `device_type` e `payment_mode` têm frequência alta para determinados valores (moda), mostrando padrões predominantes de uso.
+3. **Desbalanceamento de classes:**
+   - Apenas **6,5%** das transações são fraudulentas (489 de 7.500). Esse desbalanceamento deve ser tratado na modelagem preditiva por meio de técnicas como **SMOTE** (Synthetic Minority Over-sampling Technique), **undersampling** da classe majoritária, ajuste de **class weights** nos algoritmos, ou uso de métricas de avaliação adequadas como **F1-score**, **Precision-Recall AUC** e **Matthews Correlation Coefficient (MCC)** em vez de acurácia simples.
 
-4. **Distribuição de fraude**  
-   - O dataset é **desbalanceado**: apenas ~6,5% das transações são fraudulentas (`fraud_label = 1`). Isso deve ser considerado na modelagem preditiva.
+4. **Independência linear entre variáveis:**
+   - A matriz de correlação indica que as variáveis são majoritariamente independentes do ponto de vista linear, sugerindo que modelos não-lineares (como Random Forest, Gradient Boosting ou redes neurais) podem capturar melhor os padrões de fraude.
 
 ---
 

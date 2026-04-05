@@ -278,6 +278,20 @@ Para compreender melhor as relações entre as variáveis numéricas do dataset,
 
 Os resultados obtidos na matriz de correlação indicam que a maioria das variáveis apresenta correlação linear fraca entre si, com coeficientes próximos de zero. A exceção mais notável é o par `transaction_amount` e `avg_transaction_amount`, que apresenta correlação positiva leve, indicando que usuários com histórico de transações altas tendem a realizar transações atuais de valores mais elevados. Variáveis de risco como `ip_risk_score` e `is_international` apresentam associação fraca com `fraud_label`, sugerindo que, embora exista relação, ela não é puramente linear — o que reforça a necessidade de modelos mais complexos para capturar esses padrões.
 
+## 🔍 Feature Importance (pipeline)
+
+Mede a importância relativa de cada variável na decisão do modelo.
+
+A análise de Feature Importance indica quais variáveis têm maior impacto nas decisões do modelo.
+
+![feature_importance](../docs/plots/feature_importance.png)
+
+Observa-se que as features mais relevantes são relacionadas ao dispositivo, tempo de conta e comportamento de transação, como `device_type`, `account_age_days` e `payment_mode`. Por outro lado, variáveis como `is_international` e `login_attempts_last_24h` apresentam menor influência.
+
+Esses resultados mostram que o modelo utiliza múltiplas variáveis de forma combinada para identificar padrões de fraude, indicando que o problema não depende de uma única variável dominante.
+
+---
+
 ## 🔎 Resumo Executivo dos Achados
 
 A análise exploratória do dataset **Digital Payment Fraud Detection** permite consolidar os seguintes pontos-chave para orientar a etapa de modelagem preditiva:

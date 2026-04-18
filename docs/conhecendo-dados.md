@@ -4,14 +4,14 @@ O **dataset Digital Payment Fraud Detection** contém informações sobre **7.50
 
 #### 🗃️ Descrição Geral do Dataset
 
-O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de cada transação, sem valores nulos ou registros duplicados de `transaction_id`.O campo `user_id` pode se repetir, já que cada usuário pode realizar múltiplas transações.  
+O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de cada transação, sem valores nulos ou registros duplicados de `transaction_id`.O campo `user_id` pode se repetir, já que cada usuário pode realizar múltiplas transações. As variaveis 'is_international' e 'fraud_label' são variaveis numericas binarias classificadas como 0 e 1, podendo ser analisadas numericamente em alguns procedimentos.
 
 **Colunas do dataset:**
 
 | Coluna                    | Tipo       | Descrição                                     |  Exemplo       |
 |----------------------------|------------|-----------------------------------------------|------------|
-| `transaction_id`           | numérica   | ID único da transação                          |	T1       |
-| `user_id`                  | numérica   | ID do usuário                                  |	U3756     |
+| `transaction_id`           | identificadores/categóricos | ID único da transação                          |	T1       |
+| `user_id`                  | identificadores/categóricos | ID do usuário                                  |	U3756     |
 | `transaction_amount`       | numérica   | Valor da transação                             |18758.28   |
 | `transaction_type`         | categórica | Tipo de transação                              |Transfer   |
 | `payment_mode`             | categórica | Método de pagamento                            |	UPI       |
@@ -21,10 +21,10 @@ O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de
 | `transaction_hour`         | numérica   | Hora da transação                               | 14	      |
 | `previous_failed_attempts` | numérica   | Número de tentativas falhas anteriores         |  1        |
 | `avg_transaction_amount`   | numérica   | Valor médio das transações anteriores          | 25535.84  |
-| `is_international`         | categórica | Indica se a transação é internacional         |  0         |
+| `is_international`         | categórica | São variaveis numericas binarias classificadas como 0 (nacional) e 1(internacional)|  0         |
 | `ip_risk_score`            | numérica   | Score de risco associado ao IP                 |  0.718	   |
 | `login_attempts_last_24h`  | numérica   | Tentativas de login nas últimas 24 horas      |  4         | 
-| `fraud_label`              | categórica | Indicador de fraude (0 = não, 1 = fraudulenta)|   0.       |
+| `fraud_label`              | categórica | São variaveis numericas binarias classificadas como 0 (legitima) e 1(fraude)|   0        |
 
 #### 📊 Estatísticas Descritivas do Dataset
 

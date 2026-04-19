@@ -278,11 +278,9 @@ Em ambos os métodos, valores próximos de **1** indicam associação positiva, 
 
 Os resultados de Pearson e Spearman são consistentes entre si: todas as correlações observadas são muito fracas, com valor absoluto máximo em torno de **0,04**. Isso indica que as variáveis numéricas do dataset são majoritariamente independentes entre si, tanto do ponto de vista linear quanto monotônico. Variáveis de risco como `ip_risk_score` e `is_international` apresentam associação praticamente nula com `fraud_label`, reforçando que eventuais padrões de fraude dependem de interações mais complexas entre variáveis — o que justifica o uso de modelos não-lineares na etapa de modelagem.
 
-## 🔍 Nota sobre Feature Importance
+## 🔍 Feature Importance
 
-Uma análise preliminar de importância de variáveis foi realizada durante a exploração dos dados, utilizando um pipeline com modelo de classificação. No entanto, essa análise apresentou **vazamento de dados (data leakage)**: a variável-alvo `fraud_label` foi incluída inadvertidamente como feature de entrada, o que produziu resultados artificialmente perfeitos e sem validade estatística.
-
-Por esse motivo, os resultados foram descartados desta documentação. A construção e avaliação adequada de modelos preditivos — com separação correta entre variáveis de entrada e variável-alvo, além de validação cruzada — será conduzida na **Etapa 3** do projeto.
+A análise de importância de variáveis será conduzida na **Etapa 3**, junto com a construção e avaliação dos modelos preditivos, garantindo separação correta entre features e variável-alvo e validação cruzada estratificada.
 
 ---
 

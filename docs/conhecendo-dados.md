@@ -10,8 +10,8 @@ O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de
 
 | Coluna                    | Tipo       | Descrição                                     |  Exemplo       |
 |----------------------------|------------|-----------------------------------------------|------------|
-| `transaction_id`           | numérica   | ID único da transação                          |	T1       |
-| `user_id`                  | numérica   | ID do usuário                                  |	U3756     |
+| `transaction_id`           | identificador | ID único da transação                          |	T1       |
+| `user_id`                  | identificador | ID do usuário                                  |	U3756     |
 | `transaction_amount`       | numérica   | Valor da transação                             |18758.28   |
 | `transaction_type`         | categórica | Tipo de transação                              |Transfer   |
 | `payment_mode`             | categórica | Método de pagamento                            |	UPI       |
@@ -21,10 +21,10 @@ O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de
 | `transaction_hour`         | numérica   | Hora da transação                               | 14	      |
 | `previous_failed_attempts` | numérica   | Número de tentativas falhas anteriores         |  1        |
 | `avg_transaction_amount`   | numérica   | Valor médio das transações anteriores          | 25535.84  |
-| `is_international`         | categórica | Indica se a transação é internacional         |  0         |
+| `is_international`         | binária (0/1) | Indica se a transação é internacional         |  0         |
 | `ip_risk_score`            | numérica   | Score de risco associado ao IP                 |  0.718	   |
 | `login_attempts_last_24h`  | numérica   | Tentativas de login nas últimas 24 horas      |  4         | 
-| `fraud_label`              | categórica | Indicador de fraude (0 = não, 1 = fraudulenta)|   0.       |
+| `fraud_label`              | binária (0/1) | Indicador de fraude (0 = não, 1 = fraudulenta)|   0.       |
 
 #### 📊 Estatísticas Descritivas do Dataset
 
@@ -61,8 +61,6 @@ A tabela abaixo resume a **quantidade e percentual de outliers** detectados para
 
 | Coluna                     | Count | Percentagem (%) | Min Outlier | Max Outlier |
 |-----------------------------|-------|----------------|------------|------------|
-| is_international            | 755   | 10.07          | 1          | 1          |
-| fraud_label                 | 489   | 6.52           | 1          | 1          |
 | transaction_amount          | 0     | 0.00           | -          | -          |
 | account_age_days            | 0     | 0.00           | -          | -          |
 | transaction_hour            | 0     | 0.00           | -          | -          |
@@ -75,9 +73,10 @@ A tabela abaixo resume a **quantidade e percentual de outliers** detectados para
 
 ### 🔹 Observações
 
-- As variáveis **`is_international`** e **`fraud_label`** apresentam outliers, mas isso é esperado, pois são **variáveis binárias** (`0` ou `1`).  
-- Nenhuma outra variável numérica apresentou outliers pelo critério IQR, indicando que os valores extremos em **`transaction_amount`, `account_age_days`**, entre outras, estão dentro de um intervalo esperado.  
+- Nenhuma variável numérica contínua apresentou outliers pelo critério IQR, indicando que os valores de **`transaction_amount`, `account_age_days`**, entre outras, estão dentro de um intervalo esperado.  
 - O método IQR provê uma **detecção rápida e padronizada** de valores extremos, permitindo identificar casos atípicos sem distorcer as análises de tendências centrais ou dispersão.  
+
+> **Nota metodológica:** As variáveis binárias **`is_international`** e **`fraud_label`** foram excluídas desta análise. O método IQR, ao ser aplicado a distribuições 0/1 desbalanceadas, classifica os valores da classe minoritária como "outliers" — um artefato estatístico que não representa anomalias reais. Essas variáveis devem ser avaliadas por outros critérios, como proporção de classes e análise de distribuição categórica.  
 
 #### 📊 Análise Visual das Variáveis Numéricas
 
@@ -132,7 +131,7 @@ A seguir, são apresentados os histogramas e boxplots das variáveis numéricas 
 
 #### 📦 Análise Comparativa por Classe (Boxplots)
 
-A seguir, são apresentados os boxplots das variáveis numéricas segmentados por classe (**Não Fraude** vs **Fraude**). Essa visualização permite comparar diretamente o comportamento das distribuições entre os dois grupos e identificar variáveis com maior poder discriminativo.
+A seguir, são apresentados os boxplots das variáveis numéricas segmentados por classe (**Não Fraude** vs **Fraude**). Essa visualização permite comparar diretamente o comportamento das distribuições entre os dois grupos e identificar variáveis com possível poder discriminativo.
 
  ![boxplot](../docs/plots/boxplot_classe.png)
 
@@ -166,7 +165,7 @@ A seguir, são apresentados os boxplots das variáveis numéricas segmentados po
 
 * Transações fraudulentas apresentam maior número de tentativas falhas anteriores.
 * A mediana e a dispersão são mais elevadas na classe de fraude.
-* Essa variável se destaca como um forte indicador de comportamento suspeito.
+* Essa variável apresenta indícios relevantes de comportamento suspeito, a serem validados na modelagem.
 
 ---
 
@@ -182,7 +181,7 @@ A seguir, são apresentados os boxplots das variáveis numéricas segmentados po
 
 * Transações fraudulentas apresentam maior proporção de operações internacionais (`1`).
 * Transações não fraudulentas são predominantemente nacionais (`0`).
-* Essa variável possui forte potencial discriminativo, mesmo sendo binária.
+* Essa variável apresenta potencial discriminativo a ser validado na modelagem.
 
 ---
 
@@ -190,7 +189,7 @@ A seguir, são apresentados os boxplots das variáveis numéricas segmentados po
 
 * A classe de fraude apresenta valores mais elevados de score de risco.
 * A mediana é superior e há maior concentração próxima de valores altos (próximo de 1).
-* Indica forte correlação entre risco do IP e ocorrência de fraude.
+* Sugere uma associação entre risco do IP e ocorrência de fraude, embora a correlação linear seja fraca.
 
 ---
 
@@ -212,14 +211,14 @@ A seguir, são apresentados os boxplots das variáveis numéricas segmentados po
 
 ### 🔎 Conclusão Geral
 
-A análise dos boxplots por classe revela que algumas variáveis possuem maior poder de diferenciação entre transações fraudulentas e legítimas, especialmente:
+A análise dos boxplots por classe sugere que algumas variáveis podem contribuir para a diferenciação entre transações fraudulentas e legítimas, especialmente:
 
 * `previous_failed_attempts`
 * `is_international`
 * `ip_risk_score`
 * `login_attempts_last_24h`
 
-Essas variáveis são fortes candidatas para modelos preditivos de fraude, enquanto outras, como `transaction_hour` e `transaction_amount`, podem ter maior valor quando combinadas com múltiplos fatores.
+Essas variáveis são candidatas promissoras para modelos preditivos de fraude, enquanto outras, como `transaction_hour` e `transaction_amount`, podem ter maior valor quando combinadas com múltiplos fatores.
 
 
 ## 💳 Comparando transações fraudulentas vs. legítimas
@@ -268,27 +267,34 @@ As taxas identificadas nesta análise (entre 6.1% e 7.1%) estão consideravelmen
 
 ## 🔗 Análise de Correlação entre Variáveis Numéricas
 
-Para compreender melhor as relações entre as variáveis numéricas do dataset, construímos uma **matriz de correlação**, que mostra a intensidade e direção das associações entre as variáveis.
+Para compreender as relações entre as variáveis numéricas do dataset, utilizamos dois métodos complementares de correlação:
 
-- Valores próximos de **1** indicam forte correlação positiva, ou seja, quando uma variável aumenta, a outra tende a aumentar.  
-- Valores próximos de **-1** indicam forte correlação negativa, ou seja, quando uma variável aumenta, a outra tende a diminuir.  
-- Valores próximos de **0** indicam pouca ou nenhuma correlação entre as variáveis.
+- **Pearson** — mede a correlação **linear** entre variáveis. Foi adotado como métrica principal para as variáveis contínuas do dataset.
+- **Spearman** — mede a correlação **monotônica** (baseada em ranks), sendo menos sensível a outliers e capaz de captar relações não lineares, desde que monotônicas. Foi utilizado como complemento para verificar a consistência dos resultados.
+
+Em ambos os métodos, valores próximos de **1** indicam associação positiva, valores próximos de **-1** indicam associação negativa, e valores próximos de **0** indicam ausência de associação.
 
 ![matriz_correlacao](../docs/plots/matriz_correlacao_variaceis_numericas.png)
 
-Os resultados obtidos na matriz de correlação indicam que a maioria das variáveis apresenta correlação linear fraca entre si, com coeficientes próximos de zero. A exceção mais notável é o par `transaction_amount` e `avg_transaction_amount`, que apresenta correlação positiva leve, indicando que usuários com histórico de transações altas tendem a realizar transações atuais de valores mais elevados. Variáveis de risco como `ip_risk_score` e `is_international` apresentam associação fraca com `fraud_label`, sugerindo que, embora exista relação, ela não é puramente linear — o que reforça a necessidade de modelos mais complexos para capturar esses padrões.
+Os resultados de Pearson e Spearman são consistentes entre si: todas as correlações observadas são muito fracas, com valor absoluto máximo em torno de **0,04**. Isso indica que as variáveis numéricas do dataset são majoritariamente independentes entre si, tanto do ponto de vista linear quanto monotônico. Variáveis de risco como `ip_risk_score` e `is_international` apresentam associação praticamente nula com `fraud_label`, reforçando que eventuais padrões de fraude dependem de interações mais complexas entre variáveis — o que justifica o uso de modelos não-lineares na etapa de modelagem.
 
-## 🔍 Feature Importance (pipeline)
+## 🔍 Feature Importance
 
-Mede a importância relativa de cada variável na decisão do modelo.
+A análise de importância de variáveis será conduzida na **Etapa 3**, junto com a construção e avaliação dos modelos preditivos, garantindo separação correta entre features e variável-alvo e validação cruzada estratificada.
 
-A análise de Feature Importance indica quais variáveis têm maior impacto nas decisões do modelo.
+---
 
-![feature_importance](../docs/plots/feature_importance.png)
+## 🔒 Considerações Éticas na Análise Exploratória
 
-Observa-se que as features mais relevantes são relacionadas ao dispositivo, tempo de conta e comportamento de transação, como `device_type`, `account_age_days` e `payment_mode`. Por outro lado, variáveis como `is_international` e `login_attempts_last_24h` apresentam menor influência.
+Algumas variáveis do dataset merecem atenção especial do ponto de vista ético, mesmo em uma análise exploratória:
 
-Esses resultados mostram que o modelo utiliza múltiplas variáveis de forma combinada para identificar padrões de fraude, indicando que o problema não depende de uma única variável dominante.
+- **`device_location`** — a localização geográfica do dispositivo pode introduzir viés demográfico ou regional nos modelos. Cidades com maior volume de transações podem ser penalizadas injustamente, e padrões de fraude associados a regiões específicas podem refletir desigualdades socioeconômicas em vez de comportamento fraudulento real.
+
+- **`user_id`** — embora os dados sejam sintéticos, em cenários reais esse campo permite a reidentificação indireta de indivíduos. Seu uso na modelagem deve respeitar os princípios de minimização de dados e finalidade previstos na **LGPD** (Lei Geral de Proteção de Dados).
+
+- **`ip_risk_score`** — trata-se de um score gerado por serviço externo cuja metodologia de cálculo não é transparente. Esse tipo de variável pode carregar vieses pré-existentes (por exemplo, penalizando faixas de IP de determinadas regiões ou provedores) que seriam propagados e amplificados pelo modelo.
+
+Na etapa de modelagem, será necessário avaliar o impacto dessas variáveis sobre a equidade das predições e considerar estratégias de mitigação de viés.
 
 ---
 
@@ -296,9 +302,9 @@ Esses resultados mostram que o modelo utiliza múltiplas variáveis de forma com
 
 A análise exploratória do dataset **Digital Payment Fraud Detection** permite consolidar os seguintes pontos-chave para orientar a etapa de modelagem preditiva:
 
-1. **Variáveis com maior poder discriminativo para fraude:**
+1. **Variáveis com indícios de diferenciação entre classes:**
    - `previous_failed_attempts` — transações fraudulentas apresentam mais tentativas falhas anteriores.
-   - `is_international` — proporção de transações internacionais é significativamente maior na classe de fraude.
+   - `is_international` — proporção de transações internacionais é maior na classe de fraude.
    - `ip_risk_score` — scores de risco mais elevados estão concentrados nas transações fraudulentas.
    - `login_attempts_last_24h` — usuários com fraudes tendem a ter mais tentativas de login recentes.
 

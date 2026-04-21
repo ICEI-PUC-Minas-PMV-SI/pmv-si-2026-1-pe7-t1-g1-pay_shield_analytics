@@ -4,28 +4,28 @@ O **dataset Digital Payment Fraud Detection** contém informações sobre **7.50
 
 #### 🗃️ Descrição Geral do Dataset
 
-O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de cada transação, sem valores nulos ou registros duplicados de `transaction_id`.O campo `user_id` pode se repetir, já que cada usuário pode realizar múltiplas transações. As variaveis 'is_international' e 'fraud_label' são variaveis numericas binarias classificadas como 0 e 1, podendo ser analisadas numericamente em alguns procedimentos.
+O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de cada transação, sem valores nulos ou registros duplicados de `transaction_id`.O campo `user_id` pode se repetir, já que cada usuário pode realizar múltiplas transações. As variáveis 'is_international' e 'fraud_label' são variaveis numéricas binérias classificadas como 0 e 1, podendo ser analisadas numéricamente em alguns procedimentos.
 
 **Colunas do dataset:**
 
-| Coluna                    | Tipo       | Descrição                                     |  Exemplo       |
-|----------------------------|------------|-----------------------------------------------|------------|
-| `transaction_id`           | identificadores/categóricos | ID único da transação                          |	T1       |
-| `user_id`                  | identificadores/categóricos | ID do usuário                                  |	U3756     |
-| `transaction_amount`       | numérica   | Valor da transação                             |18758.28   |
-| `transaction_type`         | categórica | Tipo de transação                              |Transfer   |
-| `payment_mode`             | categórica | Método de pagamento                            |	UPI       |
-| `device_type`              | categórica | Tipo de dispositivo utilizado                  |	Web       |
-| `device_location`          | categórica | Localização do dispositivo                     |	Hyderabad |
-| `account_age_days`         | numérica   | Idade da conta em dias                          | 895	     |
-| `transaction_hour`         | numérica   | Hora da transação                               | 14	      |
-| `previous_failed_attempts` | numérica   | Número de tentativas falhas anteriores         |  1        |
-| `avg_transaction_amount`   | numérica   | Valor médio das transações anteriores          | 25535.84  |
-| `is_international`         | categórica | São variaveis numericas binarias classificadas como 0 (nacional) e 1(internacional)|  0         |
-| `ip_risk_score`            | numérica   | Score de risco associado ao IP                 |  0.718	   |
-| `login_attempts_last_24h`  | numérica   | Tentativas de login nas últimas 24 horas      |  4         | 
-| `fraud_label`              | categórica | São variaveis numericas binarias classificadas como 0 (legitima) e 1(fraude)|   0        |
-
+| Coluna                    | Tipo                         | Descrição                                     |  Exemplo   |
+|----------------------------|-----------------------------|-----------------------------------------------|------------|
+| `transaction_id`           | identificadores/categóricos | ID único da transação                         |	T1         |
+| `user_id`                  | identificadores/categóricos | ID do usuário                                 |	U3756      |
+| `transaction_amount`       | numérica                    | Valor da transação                            |18758.28    |
+| `transaction_type`         | categórica                  | Tipo de transação                             |Transfer    |
+| `payment_mode`             | categórica                  | Método de pagamento                           |	UPI        |
+| `device_type`              | categórica                  | Tipo de dispositivo utilizado                 |	Web        |
+| `device_location`          | categórica                  | Localização do dispositivo                    |	Hyderabad  |
+| `account_age_days`         | numérica                    | Idade da conta em dias                        | 895	       |
+| `transaction_hour`         | numérica                    | Hora da transação                             | 14	        |
+| `previous_failed_attempts` | numérica                    | Número de tentativas falhas anteriores        |  1         |
+| `avg_transaction_amount`   | numérica                    | Valor médio das transações anteriores         | 25535.84   |
+| `is_international`         | categórica| São variaveis numericas binarias classificadas como 0 (nacional) e 1(internacional)|  0         |
+| `ip_risk_score`            | numérica                    | Score de risco associado ao IP                 |  0.718	   |
+| `login_attempts_last_24h`  | numérica                    | Tentativas de login nas últimas 24 horas      |  4         | 
+| `fraud_label`              | categórica| São variaveis numericas binarias classificadas como 0 (legitima) e 1(fraude)|   0        |
+ 
 #### 📊 Estatísticas Descritivas do Dataset
 
 **Colunas numéricas principais:**
@@ -55,29 +55,29 @@ O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de
 
 #### 🔍📈 Analisando Outliers com IQR
 
-Para identificar valores extremos no dataset, utilizamos o **método do Intervalo Interquartil (IQR)**, que define outliers como pontos abaixo de Q1 - 1.5*IQR ou acima de Q3 + 1.5*IQR.  
+A detecção de outliers foi realizada com o **método do Intervalo Interquartil (IQR)**, utilizando fator de ajuste 0.5 de forma exploratória para aumentar a sensibilidade em relação ao padrão (1.5), com maior capacidade de capturar desvios sutis, ao custo de maior suscetibilidade a falsos positivos.
+
+Variáveis binárias e identificadores foram excluídos da análise, pois o IQR não é apropriado para variáveis discretas restritas (0/1), podendo gerar falsos outliers sem interpretação estatística válida.
+
+Os resultados indicam baixa incidência de outliers nas variáveis contínuas analisadas. `transaction_amount`, `avg_transaction_amount` e `ip_risk_score` apresentaram poucos desvios (<1%), enquanto as demais variáveis não apresentaram ocorrências relevantes sob o critério adotado.
+
+De forma geral, os outliers concentram-se em poucas variáveis contínuas, sugerindo que abordagens complementares, como métodos multivariados ou baseados em modelos, podem ser mais adequadas para detecção de padrões de fraude.
 
 A tabela abaixo resume a **quantidade e percentual de outliers** detectados para cada variável numérica:
 
-| Coluna                     | Count | Percentagem (%) | Min Outlier | Max Outlier |
-|-----------------------------|-------|----------------|------------|------------|
-| is_international            | 755   | 10.07          | 1          | 1          |
-| fraud_label                 | 489   | 6.52           | 1          | 1          |
-| transaction_amount          | 0     | 0.00           | -          | -          |
-| account_age_days            | 0     | 0.00           | -          | -          |
-| transaction_hour            | 0     | 0.00           | -          | -          |
-| avg_transaction_amount      | 0     | 0.00           | -          | -          |
-| previous_failed_attempts    | 0     | 0.00           | -          | -          |
-| ip_risk_score               | 0     | 0.00           | -          | -          |
-| login_attempts_last_24h     | 0     | 0.00           | -          | -          |
+📌 Foram analisadas 7 colunas após filtragem estatística.
+
+| Coluna                         | Count | Percentual (%) | Min Outlier | Max Outlier |
+|--------------------------------|-------|----------------|-------------|-------------|
+| ip_risk_score                  | 51    | 0.680000       | 0.000000    | 0.006000    |
+| avg_transaction_amount         | 42    | 0.560000       | 102.790000  | 292.280000  |
+| transaction_amount             | 29    | 0.387000       | 49808.080000| 49985.900000|
+| transaction_hour               | 0     | 0.000000       | NaN         | NaN         |
+| account_age_days               | 0     | 0.000000       | NaN         | NaN         |
+| previous_failed_attempts       | 0     | 0.000000       | NaN         | NaN         |
+| login_attempts_last_24h        | 0     | 0.000000       | NaN         | NaN         |
 
 ---
-
-### 🔹 Observações
-
-- As variáveis **`is_international`** e **`fraud_label`** apresentam outliers, mas isso é esperado, pois são **variáveis binárias** (`0` ou `1`).  
-- Nenhuma outra variável numérica apresentou outliers pelo critério IQR, indicando que os valores extremos em **`transaction_amount`, `account_age_days`**, entre outras, estão dentro de um intervalo esperado.  
-- O método IQR provê uma **detecção rápida e padronizada** de valores extremos, permitindo identificar casos atípicos sem distorcer as análises de tendências centrais ou dispersão.  
 
 #### 📊 Análise Visual das Variáveis Numéricas
 
@@ -266,29 +266,82 @@ As taxas identificadas nesta análise (entre 6.1% e 7.1%) estão consideravelmen
 
 ---
 
-## 🔗 Análise de Correlação entre Variáveis Numéricas
+## 🔗 Análise de correlação (Bivariada)
 
-Para compreender melhor as relações entre as variáveis numéricas do dataset, construímos uma **matriz de correlação**, que mostra a intensidade e direção das associações entre as variáveis.
+Para compreender as relações entre as variáveis numéricas do dataset, utilizamos dois métodos complementares de correlação:
+
+- **Pearson** — mede a correlação **linear** entre variáveis. Foi adotado como métrica principal para as variáveis contínuas do dataset.
+- **Spearman** — mede a correlação **monotônica** (baseada em ranks), sendo menos sensível a outliers e capaz de captar relações não lineares, desde que monotônicas. Foi utilizado como complemento para verificar a consistência dos resultados.
+
+Em ambos os métodos:
 
 - Valores próximos de **1** indicam forte correlação positiva, ou seja, quando uma variável aumenta, a outra tende a aumentar.  
 - Valores próximos de **-1** indicam forte correlação negativa, ou seja, quando uma variável aumenta, a outra tende a diminuir.  
 - Valores próximos de **0** indicam pouca ou nenhuma correlação entre as variáveis.
 
-![matriz_correlacao](../docs/plots/matriz_correlacao_variaceis_numericas.png)
+### 📊 Matriz Correlação de Pearson
+![matriz_correlacao_pearson](../docs/plots/matriz_correlacao_variaceis_numericas.png)
 
-Os resultados obtidos na matriz de correlação indicam que a maioria das variáveis apresenta correlação linear fraca entre si, com coeficientes próximos de zero. A exceção mais notável é o par `transaction_amount` e `avg_transaction_amount`, que apresenta correlação positiva leve, indicando que usuários com histórico de transações altas tendem a realizar transações atuais de valores mais elevados. Variáveis de risco como `ip_risk_score` e `is_international` apresentam associação fraca com `fraud_label`, sugerindo que, embora exista relação, ela não é puramente linear — o que reforça a necessidade de modelos mais complexos para capturar esses padrões.
+A análise de correlação utilizando o coeficiente de Pearson evidenciou a ausência de relações lineares significativas entre as variáveis do conjunto de dados. Os coeficientes observados foram, em sua maioria, próximos de zero, tanto entre as variáveis explicativas quanto em relação à variável alvo `fraud_label`.
 
-## 🔍 Feature Importance (pipeline)
+Esse resultado indica baixa dependência linear entre os atributos, além da inexistência de multicolinearidade relevante no conjunto de dados.
 
-Mede a importância relativa de cada variável na decisão do modelo.
+Entretanto, a ausência de correlação linear não implica ausência de relação entre as variáveis, sugerindo que possíveis padrões associados à detecção de fraude podem ser de natureza não linear ou depender de interações entre múltiplos atributos.
 
-A análise de Feature Importance indica quais variáveis têm maior impacto nas decisões do modelo.
+Para validação visual, foram construídos gráficos de dispersão para pares de variáveis com maior potencial de relação, como transaction_amount versus avg_transaction_amount.
 
-![feature_importance](../docs/plots/feature_importance.png)
+### 📈 Gráficos de dispersão
 
-Observa-se que as features mais relevantes são relacionadas ao dispositivo, tempo de conta e comportamento de transação, como `device_type`, `account_age_days` e `payment_mode`. Por outro lado, variáveis como `is_international` e `login_attempts_last_24h` apresentam menor influência.
+ Os gráficos confirmam a ausência de padrões lineares fortes, reforçando os baixos valores observados na matriz de correlação.
 
-Esses resultados mostram que o modelo utiliza múltiplas variáveis de forma combinada para identificar padrões de fraude, indicando que o problema não depende de uma única variável dominante.
+ - **Valor da Transação vs Média do Usuário**
+
+   ![transaction_vs_avg_user](../docs/plots/)
+
+A característica mais importante deste gráfico é que a linha vermelha está praticamente reta e horizontal (paralela ao eixo X).
+
+**Correlação próxima de zero:** Isso indica que não existe uma relação linear entre o valor de uma transação específica e a média de transações do usuário.
+
+**Significado prático:** Saber o valor de uma transação `transaction_amount` não ajuda a prever ou estimar qual é a média de transações daquele usuário `avg_transaction_amount`. O valor de uma transação parece ser independente da média do histórico do usuário neste conjunto de dados.
+
+
+- **Valor vs Score de risco associado ao IP**
+
+![transaction_vs_ip_risk_score](../docs/plots/)
+
+**Alta Sobreposição**: A característica mais marcante deste gráfico é que os pontos vermelhos (fraude) estão "espalhados" por toda a área ocupada pelos pontos azuis (legítimas).
+
+**Ausência de Padrão Separador:** Não existe uma zona ou "corte" onde as fraudes se concentram. Isso significa que, isoladamente, nem o valor da transação nem o risco do IP conseguem diferenciar de forma eficaz uma fraude de uma transação legítima.
+
+**Distribuição Aleatória:** As fraudes parecem ocorrer com a mesma frequência em valores baixos ou altos de transação e em diferentes níveis de risco de IP.
+
+- **Tentativas de login vs Falhas**
+
+  ![login_attempts_vs_previous_failed_attempts](../docs/plots/)
+
+Este gráfico, assim como o anterior que analisamos, mostra que essas duas variáveis, quando observadas em conjunto, não oferecem um critério simples de separação.
+
+**O problema do sobreposição:** As fraudes aparecem misturadas em locais onde também existem muitas transações legítimas. Isso indica que, por si só, o número de tentativas de login (gerais ou falhas) não é um "indicador de ouro" que sinaliza fraude automaticamente.
+
+**Possível uso:** Embora não sejam bons para isolar fraudes sozinhos, eles podem ser bons complementos. Por exemplo, se você notar que, em determinado padrão de login, o "Risk Score" (que vimos no terceiro gráfico) aumenta, essas variáveis podem ajudar o modelo a confirmar a suspeita.
+
+- **Valor vs Idade da conta**
+
+ ![account_age_vs_transaction_amount](../docs/plots/)
+
+**Distribuição uniforme:** Novamente, vemos que os pontos vermelhos (fraude) e azuis (legítimas) estão espalhados uniformemente por todo o espaço do gráfico.
+
+**Ausência de correlação:** Não há um agrupamento de fraudes em contas novas ou em contas antigas, nem em transações de valores altos ou baixos. Elas estão presentes em todas as combinações de idade de conta e valor da transação.
+
+### 📊 Matriz Correlação de Spearman
+
+![matriz_correlacao_spearman](../docs/plots/)
+
+Os resultados obtidos são consistentes com a análise de Pearson, indicando que não há relações monotônicas fortes adicionais não capturadas pela análise linear.
+
+As variáveis de risco e comportamento do usuário apresentam correlações moderadas a altas entre si, sugerindo consistência interna e possível redundância entre features derivadas.
+
+Por outro lado, a variável alvo fraud_label apresenta correlações próximas de zero com as demais variáveis, sugerindo que a detecção de fraude não depende de relações isoladas simples, sejam lineares ou monotônicas.
 
 ---
 
@@ -312,7 +365,19 @@ A análise exploratória do dataset **Digital Payment Fraud Detection** permite 
    - A matriz de correlação indica que as variáveis são majoritariamente independentes do ponto de vista linear, sugerindo que modelos não-lineares (como Random Forest, Gradient Boosting ou redes neurais) podem capturar melhor os padrões de fraude.
 
 ---
+## 🔒 Considerações Éticas na Análise Exploratória
 
+Algumas variáveis do dataset merecem atenção especial do ponto de vista ético, mesmo em uma análise exploratória:
+
+- **`device_location`** — a localização geográfica do dispositivo pode introduzir viés demográfico ou regional nos modelos. Cidades com maior volume de transações podem ser penalizadas injustamente, e padrões de fraude associados a regiões específicas podem refletir desigualdades socioeconômicas em vez de comportamento fraudulento real.
+
+- **`user_id`** — embora os dados sejam sintéticos, em cenários reais esse campo permite a reidentificação indireta de indivíduos. Seu uso na modelagem deve respeitar os princípios de minimização de dados e finalidade previstos na **LGPD** (Lei Geral de Proteção de Dados).
+
+- **`ip_risk_score`** — trata-se de um score gerado por serviço externo cuja metodologia de cálculo não é transparente. Esse tipo de variável pode carregar vieses pré-existentes (por exemplo, penalizando faixas de IP de determinadas regiões ou provedores) que seriam propagados e amplificados pelo modelo.
+
+Na etapa de modelagem, será necessário avaliar o impacto dessas variáveis sobre a equidade das predições e considerar estratégias de mitigação de viés.
+
+---
 
 ## 🛠️Ferramentas utilizadas
 

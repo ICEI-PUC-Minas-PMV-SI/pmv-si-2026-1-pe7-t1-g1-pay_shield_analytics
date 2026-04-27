@@ -1,12 +1,28 @@
-# Conhecendo os dados
+# 📊 Conhecendo os dados
 
 O **dataset Digital Payment Fraud Detection** contém informações sobre **7.500 transações digitais sintéticas**, incluindo valores, tipos de pagamento e indicadores de fraude (`fraud_label`). Ele reúne **variáveis numéricas e categóricas**, relacionadas a **comportamento, finanças, dispositivos e risco**, e é ideal para **análise exploratória**, **identificação de outliers** e **estudo de padrões de fraude** antes da aplicação de modelos preditivos. As análises foram realizadas com base no arquivo **Digital_Payment_Fraud_Detection_Dataset.csv**.
 
-#### 🗃️ Descrição Geral do Dataset
+A variável alvo `fraud_label` é binária:
 
-O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de cada transação, sem valores nulos ou registros duplicados de `transaction_id`.O campo `user_id` pode se repetir, já que cada usuário pode realizar múltiplas transações. As variáveis 'is_international' e 'fraud_label' são variaveis numéricas binérias classificadas como 0 e 1, podendo ser analisadas numéricamente em alguns procedimentos.
+- **0** → transação legítima  
 
-**Colunas do dataset:**
+- **1** → transação fraudulenta 
+
+🗂️ **Estrutura do Dataset**
+
+O dataset possui:
+
+- **7.500 registros**
+
+- **15 colunas**
+
+- **0 valores ausentes**
+
+- **0 duplicações em `transaction_id`**
+
+A variável `user_id` pode se repetir, pois um mesmo usuário pode realizar múltiplas transações.
+
+**📌 Dicionário de Variáveis**
 
 | Coluna                    | Tipo                         | Descrição                                     |  Exemplo   |
 |----------------------------|-----------------------------|-----------------------------------------------|------------|
@@ -26,9 +42,17 @@ O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de
 | `login_attempts_last_24h`  | numérica                    | Tentativas de login nas últimas 24 horas      |  4         | 
 | `fraud_label`              | categórica| São variaveis numericas binarias classificadas como 0 (legitima) e 1(fraude)|   0        |
  
-#### 📊 Estatísticas Descritivas do Dataset
+# 📊 Estatísticas Descritivas do Dataset
 
-**Colunas numéricas principais:**
+A análise descritiva foi aplicada às variáveis numéricas do dataset com o objetivo de compreender sua distribuição, variabilidade e possíveis padrões relevantes.
+
+O dataset contém 7.500 registros. De forma geral, observa-se que algumas variáveis apresentam média e mediana próximas, indicando distribuições relativamente simétricas, enquanto outras demonstram maior dispersão, evidenciada pelo desvio padrão elevado.
+
+Também foram identificados valores extremos (outliers), principalmente em variáveis relacionadas a valores monetários, o que é esperado em dados financeiros.
+
+A variável alvo (`fraud_label`) apresenta forte desbalanceamento, com aproximadamente 6,5% dos registros classificados como fraude, o que deve ser considerado na etapa de modelagem.
+
+**Colunas numéricas:**
 
 | Coluna                   | Min      | 25%       | 50%       | 75%       | Max       | Média     | Std       | Moda       | Valores ausentes |
 |---------------------------|----------|-----------|-----------|-----------|-----------|-----------|-----------|------------|----------------|
@@ -42,7 +66,7 @@ O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de
 | login_attempts_last_24h   | 1        | 3         | 5         | 7         | 9         | 4.99      | 2.59      | 1          | 0              |
 | fraud_label               | 0        | 0         | 0         | 0         | 1         | 0.065     | 0.25      | 0          | 0              |
 
-**Colunas categóricas / IDs principais:**
+**Colunas categóricas / IDs :**
 
 | Coluna             | Tipo   | Moda         | Frequência | % Frequência | Valores únicos |
 |-------------------|--------|-------------|------------|--------------|----------------|
@@ -53,19 +77,83 @@ O dataset possui **7.500 linhas** e **15 colunas**, contendo dados detalhados de
 | device_type        | object | Web         | 2537       | 33.83%       | 3 (Web, Mobile, Tablet)              |
 | device_location    | object | Hyderabad   | 1614       | 21.52%       | 5 (Hyderabad, Mumbai, Delhi, Bangalore, Chennai)              |
 
-#### 🔍📈 Analisando Outliers com IQR
+# 📉 Dispersão (Variabilidade e Outliers)
+Foram analisadas as medidas de dispersão das variáveis numéricas, utilizando o desvio padrão (std) e o intervalo interquartil (IQR), com o objetivo de avaliar a variabilidade dos dados e identificar possíveis valores atípicos.
 
-A detecção de outliers foi realizada com o **método do Intervalo Interquartil (IQR)**, utilizando fator de ajuste 0.5 de forma exploratória para aumentar a sensibilidade em relação ao padrão (1.5), com maior capacidade de capturar desvios sutis, ao custo de maior suscetibilidade a falsos positivos.
+Observa-se que algumas variáveis apresentam desvio padrão elevado, indicando grande dispersão dos dados em relação à média. Esse comportamento sugere a presença de diferentes perfis de transações, com valores bastante heterogêneos.
 
-Variáveis binárias e identificadores foram excluídos da análise, pois o IQR não é apropriado para variáveis discretas restritas (0/1), podendo gerar falsos outliers sem interpretação estatística válida.
+O IQR também apresenta valores altos em determinadas variáveis, o que reforça a existência de ampla variação no intervalo central dos dados. Essa característica é comum em datasets financeiros e pode estar associada tanto a padrões legítimos quanto a comportamentos anômalos.
 
-Os resultados indicam baixa incidência de outliers nas variáveis contínuas analisadas. `transaction_amount`, `avg_transaction_amount` e `ip_risk_score` apresentaram poucos desvios (<1%), enquanto as demais variáveis não apresentaram ocorrências relevantes sob o critério adotado.
+Embora os outliers não tenham sido isolados individualmente nesta etapa, os resultados indicam forte indício de valores extremos, o que justifica a aplicação de métodos específicos de detecção de anomalias em etapas futuras da análise.
 
-De forma geral, os outliers concentram-se em poucas variáveis contínuas, sugerindo que abordagens complementares, como métodos multivariados ou baseados em modelos, podem ser mais adequadas para detecção de padrões de fraude.
+📊 **Medidas de Dispersão (Variáveis Numéricas Contínuas)**
 
-A tabela abaixo resume a **quantidade e percentual de outliers** detectados para cada variável numérica:
+| Variável | Std (Desvio Padrão) | IQR (Intervalo Interquartil) |
+|----------|---------------------|-------------------------------|
+| transaction_amount | 14434.74 | 25015.59 |
+| account_age_days | 575.63 | 1002.25 |
+| transaction_hour | 6.95 | 13.00 |
+| previous_failed_attempts | 1.42 | 2.00 |
+| avg_transaction_amount | 8597.76 | 14847.22 |
+| ip_risk_score | 0.29 | 0.50 |
+| login_attempts_last_24h | 2.59 | 4.00 |
 
-📌 Foram analisadas 7 colunas após filtragem estatística.
+# 📦 Histogramas (Distribuição dos Dados)
+Os histogramas mostram a distribuição das variáveis do dataset, permitindo analisar o comportamento geral dos dados.
+
+Observa-se que variáveis como `transaction_amount` e `avg_transaction_amount` apresentam alta dispersão, sem concentração clara em um único intervalo. Já variáveis discretas, como `previous_failed_attempts` e `login_attempts_last_24h`, possuem distribuição em valores inteiros, como esperado.
+
+As variáveis binárias (`is_international` e `fraud_label`) apresentam forte desbalanceamento, com predominância da classe 0.
+
+![distribution_numeric_variables](../docs/plots/)
+
+# 📦 Boxplots (Detecção de Outliers)
+
+Os boxplots foram utilizados para identificar possíveis outliers e analisar a dispersão das variáveis numéricas.
+
+Observa-se que variáveis como `transaction_amount` e `avg_transaction_amount` apresentam grande amplitude, porém sem presença clara de outliers extremos, indicando uma distribuição contínua dos valores.
+
+Já variáveis binárias, como `is_international` e `fraud_label`, apresentam pontos isolados, o que é esperado devido ao desbalanceamento entre as classes.
+
+Além disso, algumas variáveis com escalas menores aparecem achatadas no gráfico, dificultando a visualização de possíveis variações devido à diferença de magnitude entre as variáveis.
+
+De forma geral, não foram identificados outliers extremos evidentes nas variáveis monetárias, sugerindo dados relativamente consistentes, embora a análise visual seja limitada pela diferença de escala entre as variáveis.
+
+![outlier_detection_numeric_variables](../docs/plots/)
+
+# 📊 Detecção de Outliers (Análise Comparativa)
+
+Nesta etapa, os outliers foram analisados utilizando o método do intervalo interquartil (IQR) em duas configurações distintas: o critério padrão (1.5×IQR) e uma abordagem mais sensível (0.5×IQR).
+
+O objetivo dessa comparação é avaliar tanto outliers estatisticamente significativos quanto possíveis valores atípicos leves que poderiam indicar padrões anômalos em um contexto exploratório.
+
+Com o critério padrão (1.5×IQR), não foram identificados outliers relevantes em algumas variáveis, indicando uma boa consistência dos dados segundo esse critério estatístico.
+
+Já com o critério mais sensível (0.5×IQR), observa-se um aumento no número de valores classificados como outliers, o que evidencia maior sensibilidade na detecção de variações extremas leves.
+
+📌 **IQR padrão**
+
+| Column                         | Count | Percentage (%) | Min Outlier | Max Outlier |
+|--------------------------------|-------|----------------|-------------|-------------|
+| transaction_amount             | 0     | 0.000000       | None        | None        |
+| account_age_days               | 0     | 0.000000       | None        | None        |
+| transaction_hour               | 0     | 0.000000       | None        | None        |
+| previous_failed_attempts       | 0     | 0.000000       | None        | None        |
+| avg_transaction_amount         | 0     | 0.000000       | None        | None        |
+| ip_risk_score                  | 0     | 0.000000       | None        | None        |
+| login_attempts_last_24h        | 0     | 0.000000       | None        | None        |
+
+📌 **IQR exploratório** 
+
+A detecção de outliers foi realizada utilizando o método do intervalo interquartil (IQR), com fator de ajuste 0.5 em uma abordagem exploratória. Essa configuração torna a análise mais sensível a variações nos dados, em comparação ao critério padrão (1.5×IQR), aumentando a capacidade de identificar possíveis desvios, porém com maior suscetibilidade a falsos positivos.
+
+Variáveis binárias e identificadores foram excluídos da análise, uma vez que o método IQR não é adequado para dados discretos restritos (0/1), podendo gerar classificações de outliers sem significado estatístico relevante.
+
+Os resultados indicam baixa incidência de outliers nas variáveis contínuas analisadas. As variáveis relacionadas a valores transacionais e risco apresentam poucos registros classificados como atípicos sob o critério exploratório adotado, enquanto as demais variáveis não apresentam ocorrências significativas.
+
+De forma geral, observa-se que os possíveis outliers estão concentrados em poucas variáveis contínuas, sugerindo que métodos complementares, como abordagens multivariadas ou baseadas em modelos, podem ser mais adequados para a identificação de padrões anômalos em problemas de detecção de fraude.
+
+A análise foi realizada como etapa exploratória complementar à visualização por boxplots.
 
 | Coluna                         | Count | Percentual (%) | Min Outlier | Max Outlier |
 |--------------------------------|-------|----------------|-------------|-------------|

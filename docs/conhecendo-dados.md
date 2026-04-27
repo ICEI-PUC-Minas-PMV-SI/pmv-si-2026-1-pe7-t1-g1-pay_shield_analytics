@@ -105,7 +105,7 @@ Observa-se que variáveis como `transaction_amount` e `avg_transaction_amount` a
 
 As variáveis binárias (`is_international` e `fraud_label`) apresentam forte desbalanceamento, com predominância da classe 0.
 
-![distribution_numeric_variables](../docs/plots/)
+![distribution_numeric_variables](../docs/plots/hist_distribution_numeric_variables.png)
 
 # 📦 Boxplots (Detecção de Outliers)
 
@@ -119,7 +119,7 @@ Além disso, algumas variáveis com escalas menores aparecem achatadas no gráfi
 
 De forma geral, não foram identificados outliers extremos evidentes nas variáveis monetárias, sugerindo dados relativamente consistentes, embora a análise visual seja limitada pela diferença de escala entre as variáveis.
 
-![outlier_detection_numeric_variables](../docs/plots/)
+![outlier_detection_numeric_variables](../docs/plots/box_outlier_detection_numeric_variables.png)
 
 # 📊 Detecção de Outliers (Análise Comparativa)
 
@@ -384,7 +384,7 @@ Para validação visual, foram construídos gráficos de dispersão para pares d
 
  - **Valor da Transação vs Média do Usuário**
 
-   ![transaction_vs_avg_user](../docs/plots/)
+   ![transaction_vs_avg_user](../docs/plots/dispertion_transaction_vs_avg_user.png)
 
 A característica mais importante deste gráfico é que a linha vermelha está praticamente reta e horizontal (paralela ao eixo X).
 
@@ -395,7 +395,7 @@ A característica mais importante deste gráfico é que a linha vermelha está p
 
 - **Valor vs Score de risco associado ao IP**
 
-![transaction_vs_ip_risk_score](../docs/plots/)
+![transaction_vs_ip_risk_score](../docs/plots/dispertion_transaction_vs_ip_risk_score.png)
 
 **Alta Sobreposição**: A característica mais marcante deste gráfico é que os pontos vermelhos (fraude) estão "espalhados" por toda a área ocupada pelos pontos azuis (legítimas).
 
@@ -405,7 +405,7 @@ A característica mais importante deste gráfico é que a linha vermelha está p
 
 - **Tentativas de login vs Falhas**
 
-  ![login_attempts_vs_previous_failed_attempts](../docs/plots/)
+  ![login_attempts_vs_previous_failed_attempts](../docs/plots/dispertion_login_attempts_vs_previous_failed_attempts.png)
 
 Este gráfico, assim como o anterior que analisamos, mostra que essas duas variáveis, quando observadas em conjunto, não oferecem um critério simples de separação.
 
@@ -415,7 +415,7 @@ Este gráfico, assim como o anterior que analisamos, mostra que essas duas vari�
 
 - **Valor vs Idade da conta**
 
- ![account_age_vs_transaction_amount](../docs/plots/)
+ ![account_age_vs_transaction_amount](../docs/plots/dispertion_account_age_vs_transaction_amount.png)
 
 **Distribuição uniforme:** Novamente, vemos que os pontos vermelhos (fraude) e azuis (legítimas) estão espalhados uniformemente por todo o espaço do gráfico.
 

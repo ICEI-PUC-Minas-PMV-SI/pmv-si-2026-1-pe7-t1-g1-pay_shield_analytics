@@ -1,16 +1,16 @@
 # ⚙️ Preparação dos Dados
 
-**Limpeza de Dados**
+🧹 **Limpeza de Dados**
 
 O dataset original contém 7.500 transações e não apresentou valores ausentes nem registros duplicados, conforme verificado na etapa de qualidade dos dados [(seção 2.4)](../src/code/paymment_fraud_notebook.ipynb). A etapa de limpeza concentrou-se na remoção de colunas redundantes e identificadoras sem poder preditivo: `transaction_id` (único por linha, sem padrão generalizável), `user_id` (removido para evitar memorização por usuário), e colunas derivadas de agregações que introduziriam data leakage (`user_failed_mean`, `user_failed_min`, `failed_deviation`, `user_rolling_avg`, `user_rolling_std`). Após essa remoção, o dataset ficou com 21 colunas. Em seguida, colunas com valores ausentes foram eliminadas via `dropna(axis=1)`.
 
 A detecção de outliers foi conduzida via IQR (padrão e exploratório). Optou-se pela manutenção dos outliers no dataset de modelagem, pois em detecção de fraude valores extremos são frequentemente os casos de maior interesse - removê-los comprometeria a capacidade do modelo de identificar exatamente os padrões anômalos que definem fraude.
 
-**Transformação de Dados**
+🔄 **Transformação de Dados**
 
 Variáveis categóricas (`payment_mode`, `device_type`, `device_location`, `transaction_type`) foram convertidas para formato numérico via *one-hot encoding* (`pd.get_dummies`), gerando colunas binárias para cada categoria. Normalização e padronização não foram aplicadas: modelos baseados em árvores de decisão são invariantes à escala das features, e aplicar `StandardScaler` antes do split treino/teste introduziria data leakage - o scaler aprenderia a média e o desvio padrão do conjunto de teste.
 
-**Engenharia de Features**
+🧠 **Engenharia de Features**
 
 Foram criadas oito categorias de features derivadas para capturar padrões comportamentais que as variáveis brutas não expressam isoladamente:
 
@@ -27,15 +27,15 @@ Foram criadas oito categorias de features derivadas para capturar padrões compo
 
 Todas as features baseadas em histórico do usuário foram calculadas com `expanding()` sobre os dados ordenados por `(user_id, transaction_hour)`, garantindo que cada cálculo utilize apenas dados anteriores àquela transação e evitando vazamento de informação futura.
 
-**Detecção de Vazamento de Dados**
+💧 **Detecção de Vazamento de Dados**
 
 Antes da modelagem, foi realizada verificação sistemática de data leakage: análise de correlação entre features e a variável alvo (todas abaixo de 0.08 em valor absoluto, sem indício de leakage), comparação de médias por classe (diferenças pequenas, sem features derivadas diretamente do rótulo) e análise de padrões por usuário (mediana de 1 transação por usuário, baixo risco de memorização). Colunas derivadas da variável alvo geradas durante a EDA (`fraud_label_name`, `status_fraude`) foram explicitamente removidas antes do treinamento.
 
-**Tratamento de Desbalanceamento**
+🧮 **Tratamento de Desbalanceamento**
 
 O dataset apresenta desbalanceamento de classes: 7.011 transações legítimas (93,5%) contra 489 fraudes (6,5%), razão aproximada de 14:1. O tratamento foi feito via SMOTE (*Synthetic Minority Over-sampling Technique*) aplicado dentro de cada fold da validação cruzada através de `ImbPipeline`, garantindo que amostras sintéticas não contaminem os folds de validação - prática que inflaria artificialmente o AUC se o SMOTE fosse aplicado antes do split.
 
-**Separação dos Dados**
+📂 **Separação dos Dados**
 
 Os dados foram divididos em 80% treino (6.000 amostras) e 20% teste (1.500 amostras) por posição após ordenação por `(user_id, transaction_hour)`. A validação cruzada com 5 folds foi aplicada sobre o conjunto completo para estimativa de AUC médio.
 
@@ -47,7 +47,7 @@ O algoritmo selecionado foi o **Random Forest**, um método de *ensemble* basead
 
 O Random Forest foi escolhido por três razões centrais: (1) invariância à escala das features, eliminando a necessidade de normalização e o risco de leakage associado; (2) capacidade de capturar interações não-lineares entre variáveis sem especificação manual; (3) paralelização nativa (`n_jobs=-1`), reduzindo o tempo de treinamento sem impacto na qualidade do modelo.
 
-**Ajuste de Hiperparâmetros**
+🔧 **Ajuste de Hiperparâmetros**
 
 Os parâmetros foram experimentados sistematicamente e os efeitos documentados nos gráficos de trade-off:
 
@@ -155,3 +155,4 @@ Experimentos sistemáticos variando `n_estimators`, `max_depth`, `min_samples_le
 
 **11. Conclusão e Diagnóstico**
 Consolidação dos resultados, diagnóstico do distribution shift como causa do AUC próximo ao aleatório, e proposição de melhorias metodológicas (divisão estratificada aleatória, `StratifiedKFold`, análise de feature leakage nas features de histórico).
+> Observação: todo o código fonte utilizado está disponível na pasta `src`, permitindo reproduzir todas as análises realizadas.

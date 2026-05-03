@@ -1,12 +1,8 @@
-# Relatório de Modelagem - Detecção de Fraude em Pagamentos Digitais
-
----
-
-## Preparação dos Dados
+# Preparação dos Dados
 
 **Limpeza de Dados**
 
-O dataset original contém 7.500 transações e não apresentou valores ausentes nem registros duplicados, conforme verificado na etapa de qualidade dos dados (Seção 2.4). A etapa de limpeza concentrou-se na remoção de colunas redundantes e identificadoras sem poder preditivo: `transaction_id` (único por linha, sem padrão generalizável), `user_id` (removido para evitar memorização por usuário), e colunas derivadas de agregações que introduziriam data leakage (`user_failed_mean`, `user_failed_min`, `failed_deviation`, `user_rolling_avg`, `user_rolling_std`). Após essa remoção, o dataset ficou com 21 colunas. Em seguida, colunas com valores ausentes foram eliminadas via `dropna(axis=1)`.
+O dataset original contém 7.500 transações e não apresentou valores ausentes nem registros duplicados, conforme verificado na etapa de qualidade dos dados [(seção 2.4)](../src/code/paymment_fraud_notebook.ipynb). A etapa de limpeza concentrou-se na remoção de colunas redundantes e identificadoras sem poder preditivo: `transaction_id` (único por linha, sem padrão generalizável), `user_id` (removido para evitar memorização por usuário), e colunas derivadas de agregações que introduziriam data leakage (`user_failed_mean`, `user_failed_min`, `failed_deviation`, `user_rolling_avg`, `user_rolling_std`). Após essa remoção, o dataset ficou com 21 colunas. Em seguida, colunas com valores ausentes foram eliminadas via `dropna(axis=1)`.
 
 A detecção de outliers foi conduzida via IQR (padrão e exploratório). Optou-se pela manutenção dos outliers no dataset de modelagem, pois em detecção de fraude valores extremos são frequentemente os casos de maior interesse - removê-los comprometeria a capacidade do modelo de identificar exatamente os padrões anômalos que definem fraude.
 
@@ -97,6 +93,7 @@ Média harmônica entre precisão e recall. Sintetiza o trade-off entre as duas 
 | Random Forest + SMOTE | 0.497 ± 0.034 | 0.498 | 0.14 | 0.06 | 0.09 | 0.80 |
 
 ![Matriz de confusão e curva ROC](img/cell164_93_random_forest_com_smote.png)
+
 *Matriz de confusão e curva ROC do modelo Random Forest + SMOTE no conjunto de teste.*
 
 O modelo apresentou ROC-AUC de 0.498 no conjunto de teste - valor equivalente ao de um classificador aleatório (0.50). O recall de 0.14 indica que apenas 14% das fraudes foram detectadas, e a precisão de 0.06 revela que 94% dos alertas gerados eram falsos positivos. A acurácia global de 80%, embora aparentemente alta, é enganosa: decorre da estratégia trivial de classificar a maioria dos exemplos como legítimos, dado que fraudes representam apenas 6,5% do dataset.

@@ -1,4 +1,4 @@
-# Preparação dos Dados
+# ⚙️ Preparação dos Dados
 
 **Limpeza de Dados**
 
@@ -41,7 +41,7 @@ Os dados foram divididos em 80% treino (6.000 amostras) e 20% teste (1.500 amost
 
 ---
 
-## Descrição do Modelo
+## 📑 Descrição do Modelo
 
 O algoritmo selecionado foi o **Random Forest**, um método de *ensemble* baseado em *bagging*. Múltiplas árvores de decisão são treinadas de forma independente, cada uma sobre uma amostra aleatória com reposição dos dados de treino (*bootstrap*) e com um subconjunto aleatório das features em cada divisão. A predição final é obtida por votação majoritária entre as árvores. Essa independência entre os estimadores confere ao modelo resistência natural ao overfitting e robustez a ruído, além de produzir estimativas de importância de features como subproduto do treinamento.
 
@@ -68,7 +68,7 @@ Os parâmetros foram experimentados sistematicamente e os efeitos documentados n
 
 ---
 
-## Avaliação dos Modelos Criados
+## 📊 Avaliação dos Modelos Criados
 
 ### Métricas Utilizadas
 
@@ -108,7 +108,7 @@ Em relação aos objetivos do projeto - identificar transações fraudulentas co
 
 ---
 
-## Pipeline de Pesquisa e Análise de Dados
+## 🧪 Pipeline de Pesquisa e Análise de Dados
 
 O pipeline seguido neste projeto organiza-se nas seguintes etapas sequenciais:
 
@@ -140,9 +140,11 @@ Remoção de colunas redundantes, eliminação de colunas com ausentes, codifica
 Treinamento do pipeline `ImbPipeline(SMOTE → RandomForestClassifier)`, validação cruzada para estimativa de AUC médio, avaliação no conjunto de teste com relatório de classificação, ROC-AUC, matriz de confusão e importância de features.
 
 ![Resultado do modelo](img/cell164_93_random_forest_com_smote.png)
+
 *Matriz de confusão e curva ROC — resultado final do modelo no conjunto de teste.*
 
 ![Importância das features](img/cell167_931_importância_das_features.png)
+
 *Top 20 features por importância no Random Forest.*
 
 **10. Análise de Trade-offs dos Hiperparâmetros**

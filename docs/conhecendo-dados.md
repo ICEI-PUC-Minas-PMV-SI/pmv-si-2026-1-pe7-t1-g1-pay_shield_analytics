@@ -165,6 +165,16 @@ A análise foi realizada como etapa exploratória complementar à visualização
 | previous_failed_attempts       | 0     | 0.000000       | NaN         | NaN         |
 | login_attempts_last_24h        | 0     | 0.000000       | NaN         | NaN         |
 
+![Boxplot Outliers Numeric](../docs/img/boxplot_outliers_numeric.png)
+
+#### 🔎 Análise de Outliers Segmentada por Contexto (Payment Mode & Type)
+
+Esta análise detalha como as variáveis de desvio financeiro (`amount_deviation` e `amount_ratio`) se comportam dentro de nichos específicos de operação. Em vez de uma média global, o "corte" do outlier agora respeita o comportamento típico de cada canal de transação.
+
+A análise estatística de detecção de outliers via método IQR ($k=0.5$) evidenciou que as variáveis de desvio (`amount_deviation` e `amount_ratio`) apresentam um comportamento anômalo mais acentuado na classe de fraude (36,19%) em comparação às transações legítimas (23,10%). Embora o desvio de valor demonstre capacidade de separação — com uma incidência de outliers aproximadamente 13 pontos percentuais superior em casos de fraude — a presença de 23% de anomalias em transações verídicas sugere um alto potencial de ruído. Além disso, a paridade quase exata entre as métricas de deviation e ratio ratifica a existência de multicolinearidade, indicando redundância no uso simultâneo de ambos os atributos. Em suma, as variáveis capturam a natureza "explosiva" dos valores fraudulentos, mas a sobreposição de comportamentos atípicos legítimos exige que o modelo integre estas features a outros contextos (como modo de pagamento ou horário) para mitigar falsos positivos e refinar a precisão da classificação.
+
+![Boxplot Outliers Por Feature](../docs/img/boxplot_outliers_por_feature.png)
+
 ---
 
 #### 📊 Análise Visual das Variáveis Numéricas
@@ -368,7 +378,12 @@ Em ambos os métodos:
 - Valores próximos de **0** indicam pouca ou nenhuma correlação entre as variáveis.
 
 ### 📊 Matriz Correlação de Pearson
-![matriz_correlacao_pearson](../docs/plots/matriz_correlacao_variaceis_numericas.png)
+
+![matriz_correlacao_pearson_total](../docs/img/cell072_51_correlação_de_pearson_total.png)
+
+![matriz_correlacao_pearson](../docs/img/cell072_51_correlação_de_pearson.png)
+
+
 
 A análise de correlação utilizando o coeficiente de Pearson evidenciou a ausência de relações lineares significativas entre as variáveis do conjunto de dados. Os coeficientes observados foram, em sua maioria, próximos de zero, tanto entre as variáveis explicativas quanto em relação à variável alvo `fraud_label`.
 
@@ -423,13 +438,34 @@ Este gráfico, assim como o anterior que analisamos, mostra que essas duas vari�
 
 ### 📊 Matriz Correlação de Spearman
 
-![matriz_correlacao_spearman](../docs/plots/)
+![matriz_correlacao_spearman_total](../docs/img/cell085_53_correlação_de_spearman_total.png)
+
+![matriz_correlacao_spearman](../docs/img/cell085_53_correlação_de_spearman.png)
 
 Os resultados obtidos são consistentes com a análise de Pearson, indicando que não há relações monotônicas fortes adicionais não capturadas pela análise linear.
 
 As variáveis de risco e comportamento do usuário apresentam correlações moderadas a altas entre si, sugerindo consistência interna e possível redundância entre features derivadas.
 
 Por outro lado, a variável alvo fraud_label apresenta correlações próximas de zero com as demais variáveis, sugerindo que a detecção de fraude não depende de relações isoladas simples, sejam lineares ou monotônicas.
+
+---
+
+## 📈 Ranking de Transações com Maior Desvio
+
+Listagem das transações com maior desvio positivo em relação à média do usuário. Esses registros são candidatos primários a análise de anomalia.
+
+| user_id | transaction_amount | amount_vs_user_avg |
+|---------|--------------------|--------------------|
+| U2829   | 48120.15           | 28486.104000       |
+| U1171   | 47516.45           | 28177.693333       |
+| U9588   | 49383.10           | 28084.088000       |
+| U7031   | 48304.07           | 27377.556667       |
+| U9838   | 44854.91           | 27038.396667       |
+| U7401   | 48448.77           | 26966.560000       |
+| U7117   | 48110.52           | 26692.890000       |
+| U6902   | 46332.94           | 26190.643333       |
+| U8855   | 42385.00           | 26010.413333       |
+| U9872   | 49728.48           | 25865.566667       |
 
 ---
 
@@ -458,8 +494,6 @@ A análise exploratória do dataset **Digital Payment Fraud Detection** permite 
 Algumas variáveis do dataset merecem atenção especial do ponto de vista ético, mesmo em uma análise exploratória:
 
 - **`device_location`** — a localização geográfica do dispositivo pode introduzir viés demográfico ou regional nos modelos. Cidades com maior volume de transações podem ser penalizadas injustamente, e padrões de fraude associados a regiões específicas podem refletir desigualdades socioeconômicas em vez de comportamento fraudulento real.
-
-- **`user_id`** — embora os dados sejam sintéticos, em cenários reais esse campo permite a reidentificação indireta de indivíduos. Seu uso na modelagem deve respeitar os princípios de minimização de dados e finalidade previstos na **LGPD** (Lei Geral de Proteção de Dados).
 
 - **`ip_risk_score`** — trata-se de um score gerado por serviço externo cuja metodologia de cálculo não é transparente. Esse tipo de variável pode carregar vieses pré-existentes (por exemplo, penalizando faixas de IP de determinadas regiões ou provedores) que seriam propagados e amplificados pelo modelo.
 

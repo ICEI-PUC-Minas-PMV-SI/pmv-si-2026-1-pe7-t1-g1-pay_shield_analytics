@@ -1,20 +1,33 @@
 # Preparação dos dados
-
+    
 O conjunto de dados original contém 7.500 transações e não apresentou valores ausentes nem registros duplicados, conforme verificado na etapa de qualidade dos dados [(Google Colab - seção 2.4)](../src/code/paymment_fraud_notebook.ipynb).
-    
+
 Nesta etapa, não foram realizadas remoções de variáveis, uma vez que os identificadores e atributos originais foram mantidos temporariamente para viabilizar a etapa de engenharia de atributos e a construção de variáveis comportamentais.
-    
-Assim, esta fase teve como objetivo apenas a verificação da integridade dos dados e a preparação do conjunto para as etapas subsequentes de transformação e engenharia de atributos.
 
-Após a etapa de engenharia de atributos, foi criada uma cópia do conjunto de dados (`df_treated`), na qual foi realizada uma limpeza final com a remoção de variáveis redundantes e identificadores não utilizados no processo de modelagem.
+Assim, esta fase teve como objetivo a verificação da integridade dos dados e a preparação do conjunto para as etapas subsequentes. Após a engenharia de atributos, foi criada uma cópia do conjunto de dados (df_treated), utilizada nas etapas de limpeza, transformação e balanceamento, preservando-se o dataset original. Ao final desse processo, o conjunto utilizado na modelagem passou a conter 22 atributos.
 
-Em seguida, com o conjunto já estruturado e validado, foram aplicadas técnicas de pré-processamento e transformação com o objetivo de adequá-lo à etapa de modelagem. Essas etapas incluíram a seleção e remoção de variáveis não relevantes, bem como o tratamento do desbalanceamento das classes, contribuindo para a melhoria da qualidade das informações utilizadas pelos modelos. Após esse processo, o conjunto passou a conter 22 colunas.
+As etapas de engenharia de atributos, limpeza e transformação dos dados são apresentadas em detalhes nas subseções a seguir.
+
+## Engenharia de Features
+
+Foram criadas variáveis adicionais com o objetivo de capturar padrões comportamentais associados a transações potencialmente fraudulentas:
+
+| Feature | Descrição |
+|---|---|
+| `risk_login` | Produto entre tentativas de login e falhas anteriores |
+| `login_failure_rate` | Proporção de falhas em relação ao total de tentativas |
+| `is_night` | Flag indicando transação entre 0h e 6h |
+| `international_risk` | Interação entre transação internacional e score de risco do IP |
+| `risk_interaction` | Interação entre horário noturno e transação internacional |
+| `night_intl_risk` | Combinação de madrugada + internacional (feature de maior poder discriminativo) |
+
+Features com potencial de leakage foram avaliadas e removidas ou comentadas, conforme descrito na seção de limpeza.
 
 ## Limpeza de Dados
 
-O dataset utilizado é sintético e não apresenta valores ausentes ou duplicados, o que simplificou a etapa de limpeza. No entanto, foram identificadas e removidas features com **data leakage** (vazamento de dados) antes da modelagem. Essas features continham informação derivada do rótulo alvo (`fraud_label`) ou calculada sobre o dataset completo, o que resultaria em métricas artificialmente infladas.
+O dataset utilizado é sintético e não apresenta valores ausentes ou duplicados, o que simplificou a etapa de limpeza. No entanto, foram identificadas e removidas variáveis com potencial de **data leakage** (vazamento de dados), isto é, atributos que incorporavam informações derivadas do rótulo alvo (fraud_label) ou calculadas com base no conjunto completo de dados, o que poderia resultar em métricas artificialmente otimizadas.
 
-As seguintes colunas foram removidas por leakage:
+As variáveis removidas foram:
 
 | Feature | Motivo da Remoção |
 |---|---|
@@ -32,21 +45,6 @@ As seguintes colunas foram removidas por leakage:
 ## Transformação de Dados
 
 As variáveis categóricas (`transaction_type`, `payment_mode`, `device_type`, `device_location`) foram codificadas para formato numérico, permitindo o uso pelos algoritmos baseados em árvores. Modelos de árvore, como Random Forest, Árvore de Decisão e Gradient Boosting, são **invariantes à escala**, eliminando a necessidade de normalização ou padronização das features numéricas contínuas. Essa propriedade reduz o risco de data leakage que ocorreria se o scaler fosse ajustado sobre o dataset inteiro.
-
-## Engenharia de Features
-
-Foram criadas novas features para capturar padrões de comportamento suspeitos:
-
-| Feature | Descrição |
-|---|---|
-| `risk_login` | Produto entre tentativas de login e falhas anteriores |
-| `login_failure_rate` | Proporção de falhas em relação ao total de tentativas |
-| `is_night` | Flag indicando transação entre 0h e 6h |
-| `international_risk` | Interação entre transação internacional e score de risco do IP |
-| `risk_interaction` | Interação entre horário noturno e transação internacional |
-| `night_intl_risk` | Combinação de madrugada + internacional (feature de maior poder discriminativo) |
-
-Features com potencial de leakage foram avaliadas e removidas ou comentadas, conforme descrito na seção de limpeza.
 
 ## Tratamento de Dados Desbalanceados
 

@@ -1,15 +1,14 @@
 # Preparação dos dados
 
-O conjunto de dados original contém 7.500 transações e não apresentou valores ausentes nem registros duplicados, conforme verificado na etapa de qualidade dos dados [(seção 2.4)](../src/code/paymment_fraud_notebook.ipynb).
+O conjunto de dados original contém 7.500 transações e não apresentou valores ausentes nem registros duplicados, conforme verificado na etapa de qualidade dos dados [(Google Colab - seção 2.4)](../src/code/paymment_fraud_notebook.ipynb).
     
-    Nesta etapa, não foram realizadas remoções de variáveis, uma vez que os identificadores e atributos originais foram mantidos temporariamente para viabilizar a etapa de engenharia de atributos e a construção de variáveis comportamentais.
+Nesta etapa, não foram realizadas remoções de variáveis, uma vez que os identificadores e atributos originais foram mantidos temporariamente para viabilizar a etapa de engenharia de atributos e a construção de variáveis comportamentais.
     
-    Assim, esta fase teve como objetivo apenas a verificação da integridade dos dados e a preparação do conjunto para as etapas subsequentes de transformação e engenharia de atributos.
+Assim, esta fase teve como objetivo apenas a verificação da integridade dos dados e a preparação do conjunto para as etapas subsequentes de transformação e engenharia de atributos.
 
-    Após a etapa de engenharia de atributos, foi criada uma copia do dataset (`df_treated`) onde foi realizada uma limpeza final do conjunto de dados com o objetivo de remover variáveis redundantes e identificadores não utilizados no processo de modelagem.
+Após a etapa de engenharia de atributos, foi criada uma cópia do conjunto de dados (`df_treated`), na qual foi realizada uma limpeza final com a remoção de variáveis redundantes e identificadores não utilizados no processo de modelagem.
 
-
-A preparação dos dados é uma etapa fundamental para garantir a qualidade dos modelos de machine learning. Nesta análise, foram aplicadas diversas técnicas de pré-processamento, transformação, engenharia de features e tratamento de desbalanceamento, conforme detalhado a seguir.
+Em seguida, com o conjunto já estruturado e validado, foram aplicadas técnicas de pré-processamento e transformação com o objetivo de adequá-lo à etapa de modelagem. Essas etapas incluíram a seleção e remoção de variáveis não relevantes, bem como o tratamento do desbalanceamento das classes, contribuindo para a melhoria da qualidade das informações utilizadas pelos modelos. Após esse processo, o conjunto passou a conter 22 colunas.
 
 ## Limpeza de Dados
 
@@ -361,3 +360,5 @@ A seleção de um modelo para detecção de fraude não pode ser reduzida a uma 
 **4. Para o Dataset Atual**
 - **Recomendado:** Nenhum dos três modelos em produção com as features atuais
 - **Justificativa:** o consenso dos três algoritmos (AUC ~0.50) indica que as features disponíveis não contêm sinal preditivo suficiente. A prioridade é o enriquecimento das features ou coleta de novas variáveis comportamentais.
+
+> Observação: todo o código fonte utilizado está disponível na pasta `src`, permitindo reproduzir todas as análises realizadas.

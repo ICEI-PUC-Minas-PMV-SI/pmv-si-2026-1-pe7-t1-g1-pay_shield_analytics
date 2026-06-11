@@ -27,10 +27,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set working directory inside the container
 WORKDIR /app
 
-# Copy only the requirements file first – this leverages Docker layer caching
-COPY requirements.txt /app/
+# Copy the requirements file from src/form (ensures it's present)
+COPY src/form/requirements.txt /app/requirements.txt
 # Install Python dependencies
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r /app/requirements.txt
 
 # Copy the application source code (entire src/ directory)
 COPY src/ /app/src/

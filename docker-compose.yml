@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  pay_shield_form:
+    build: .
+    image: italo/pay_shield_form:dev
+    ports:
+      - "8501:8501"
+    restart: unless-stopped

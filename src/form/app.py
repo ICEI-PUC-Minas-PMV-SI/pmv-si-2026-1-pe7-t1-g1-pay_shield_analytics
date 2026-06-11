@@ -2,19 +2,47 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+import os
 
 # Configuração visual do Streamlit
 st.set_page_config(page_title="Detector de Fraudes", layout="wide")
 
+# Seleção de Modelo na barra lateral
+st.sidebar.header("⚙️ Configurações do Modelo")
+modelo_selecionado = st.sidebar.selectbox(
+    "Selecione o Modelo de ML",
+    ["Random Forest", "Decision Tree", "Gradient Boosting"]
+)
+
+# Mapear o nome amigável para o arquivo pkl correspondente
+mapa_modelos = {
+    "Random Forest": "random_forest.pkl",
+    "Decision Tree": "decision_tree.pkl",
+    "Gradient Boosting": "gradient_boosting.pkl"
+}
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+@st.cache_resource
+def carregar_modelo(nome_arquivo):
+    caminho = os.path.join(BASE_DIR, nome_arquivo)
+    try:
+        return joblib.load(caminho)
+    except FileNotFoundError:
+        # Fallback para o modelo_fraude.pkl se for Random Forest
+        if nome_arquivo == "random_forest.pkl":
+            return joblib.load(os.path.join(BASE_DIR, "modelo_fraude.pkl"))
+        raise
+
+modelo_pkl = mapa_modelos[modelo_selecionado]
+try:
+    modelo = carregar_modelo(modelo_pkl)
+    st.sidebar.success(f"Modelo carregado: {modelo_selecionado}")
+except Exception as e:
+    st.sidebar.error(f"Erro ao carregar o modelo: {e}")
+
 st.title("🛡️ Simulador de Risco de Fraude")
 st.write("Insira os dados operacionais, cadastrais e de comportamento para avaliar o risco da transação.")
-
-# Carrega o modelo do Colab (_rf_search)
-@st.cache_resource
-def carregar_modelo():
-    return joblib.load('modelo_fraude.pkl')
-
-modelo = carregar_modelo()
 
 st.subheader("📋 Dados da Transação, Cliente e Login")
 
@@ -33,7 +61,11 @@ with col2:
 
     login_attempts_last_24h = st.number_input("Tentativas de Login (Últimas 24h)", min_value=0, value=1)
     previous_failed_attempts = st.number_input("Tentativas de Login Falhas Anteriores", min_value=0, value=0)
-    login_failure_rate = st.slider("Taxa de Falha de Login (0.0 a 1.0)", min_value=0.0, max_value=1.0, value=0.0, step=0.05)
+    
+    # Calcular automaticamente a taxa de falha de login conforme o notebook
+    login_failure_rate = previous_failed_attempts / (login_attempts_last_24h + 1)
+    st.write("")  # Alinhamento visual
+    st.write(f"**Taxa de Falha de Login:** {login_failure_rate:.2%}")
 
 with col3:
     device_location = st.selectbox(
@@ -51,25 +83,27 @@ st.subheader("🌐 Configurações de Rede/Segurança")
 col_net1, col_net2 = st.columns(2)
 
 with col_net1:
-    ip_risk = st.selectbox("Nível de Risco do IP", ["Baixo", "Médio/Alto"])
-    high_ip_risk = 1 if ip_risk == "Médio/Alto" else 0
+    ip_risk_score = st.slider("Score de Risco do IP (0.0 a 1.0)", min_value=0.0, max_value=1.0, value=0.15, step=0.01)
 with col_net2:
-    ip_risk_score = st.slider("Score de Risco do IP (0 a 100)", min_value=0, max_value=100, value=15)
+    high_ip_risk = 1 if ip_risk_score > 0.8 else 0
+    ip_risk_label = "Médio/Alto" if high_ip_risk == 1 else "Baixo"
+    st.write("")  # Alinhamento visual
+    st.write(f"**Nível de Risco do IP:** {ip_risk_label}")
 
-# --- ENGENHARIA DE RECURSOS DERIVADAS (Regras do seu time) ---
+# --- ENGENHARIA DE RECURSOS DERIVADAS (Alinhado com o Notebook) ---
 amount = transaction_amount
 late_night_flag = 1 if (0 <= transaction_hour <= 5) else 0
-is_night = 1 if (transaction_hour >= 18 or transaction_hour <= 5) else 0
+is_night = 1 if (transaction_hour < 6) else 0
 
 hour_sin = np.sin(2 * np.pi * transaction_hour / 24)
 hour_cos = np.cos(2 * np.pi * transaction_hour / 24)
 
 international_night = 1 if (is_international_int == 1 and transaction_hour <= 5) else 0
-night_intl_risk = international_night
-international_risk = is_international_int
+night_intl_risk = 1 if (is_night == 1 and is_international_int == 1) else 0
+international_risk = is_international_int * ip_risk_score
 
-many_login_attempts = 1 if login_attempts_last_24h > 3 else 0
-risk_login = 1 if (login_failure_rate > 0.5 or login_attempts_last_24h > 3) else 0
+many_login_attempts = 1 if login_attempts_last_24h > 5 else 0
+risk_login = login_attempts_last_24h * previous_failed_attempts
 
 # Períodos do dia (One-Hot Encoding)
 periodos = {f'period_of_day_{p}': 0 for p in ["madrugada", "manha", "tarde", "noite"]}

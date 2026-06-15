@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        type: string
+      action:
+        description: 'Action to run'
+        required: true
+        type: choice
+        options:
+          - build
+          - deploy
+          - build-deploy
+
+jobs:
+  build:
+    name: Build
+    if: github.event.inputs.action == 'build' || github.event.inputs.action == 'build-deploy'
+    uses: ./.github/workflows/steps/build.yml
+    with:
+      release_version: ${{ github.event.inputs.release_version }}
+    secrets: inherit
+
+  deploy:
+    name: Deploy
+    needs: build
+    if: |
+      always() &&
+      (needs.build.result == 'success' || needs.build.result == 'skipped') &&
+      (github.event.inputs.action == 'deploy' || github.event.inputs.action == 'build-deploy')
+    uses: ./.github/workflows/steps/deploy.yml
+    with:
+      release_version: ${{ github.event.inputs.release_version }}
+    secrets: inherit

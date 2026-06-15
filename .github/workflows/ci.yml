@@ -20,7 +20,7 @@ jobs:
   build:
     name: Build
     if: github.event.inputs.action == 'build' || github.event.inputs.action == 'build-deploy'
-    uses: ./.github/workflows/steps/build.yml
+    uses: ./.github/workflows/build.yml
     with:
       release_version: ${{ github.event.inputs.release_version }}
     secrets: inherit
@@ -32,7 +32,7 @@ jobs:
       always() &&
       (needs.build.result == 'success' || needs.build.result == 'skipped') &&
       (github.event.inputs.action == 'deploy' || github.event.inputs.action == 'build-deploy')
-    uses: ./.github/workflows/steps/deploy.yml
+    uses: ./.github/workflows/deploy.yml
     with:
       release_version: ${{ github.event.inputs.release_version }}
     secrets: inherit

@@ -10,6 +10,7 @@ on:
 
 env:
   PAYSHIELD_DIRECTORY: /opt/payshield
+  SSH_USER: payshield-runner
 
 jobs:
   deploy:
@@ -20,7 +21,7 @@ jobs:
         uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          username: ${{ env.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |

@@ -4,11 +4,121 @@ import numpy as np
 import joblib
 import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Configuração visual do Streamlit
 st.set_page_config(page_title="Detector de Fraudes", layout="wide")
 
+# Detecta o tema ativo para ajustar a sidebar e o select
+_tema_ativo = st.get_option("theme.base") or "light"
+_sidebar_fundo = "linear-gradient(180deg, #08254b, #0d3a73)" if _tema_ativo == "light" else "linear-gradient(180deg, #020b16, #08254b)"
+_select_fundo = "#ffffff" if _tema_ativo == "light" else "#141c2b"
+_select_cor = "#08254b" if _tema_ativo == "light" else "#e0eaff"
+
+# Paleta de cores customizada
+st.markdown(
+    f"""
+    <style>
+    :root {{
+        --pay-blue: #004aad;
+        --pay-dark-blue: #08254b;
+        --pay-purple: #6038d0;
+        --pay-blue-purple: #445fd6;
+        --pay-cyan: #5de0e6;
+    }}
+
+    /* Botao primario com gradiente */
+    .stButton > button[kind="primary"],
+    button[kind="primary"] {{
+        background: linear-gradient(90deg, #5de0e6, #004aad) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        padding: 0.6rem 1.2rem !important;
+        transition: filter 0.2s ease-in-out, transform 0.1s ease-in-out;
+    }}
+
+    .stButton > button[kind="primary"]:hover,
+    button[kind="primary"]:hover {{
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+    }}
+
+    /* Botoes de incremento/decremento do number_input */
+    .stNumberInput button.step-up,
+    .stNumberInput button.step-down,
+    [data-testid="stNumberInput"] button {{
+        color: #445fd6 !important;
+        background-color: transparent !important;
+        border-color: #445fd6 !important;
+    }}
+
+    .stNumberInput button.step-up:hover,
+    .stNumberInput button.step-down:hover,
+    [data-testid="stNumberInput"] button:hover {{
+        color: #004aad !important;
+        background-color: rgba(68, 95, 214, 0.1) !important;
+    }}
+
+    /* Barra lateral */
+    [data-testid="stSidebar"] {{
+        background: {_sidebar_fundo};
+    }}
+
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] .stMarkdown,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] .stSelectbox label {{
+        color: #ffffff !important;
+    }}
+
+    [data-testid="stSidebar"] .stSelectbox {{
+        background-color: transparent !important;
+    }}
+
+    [data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"],
+    [data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {{
+        background-color: {_select_fundo} !important;
+        color: {_select_cor} !important;
+        border-radius: 8px !important;
+    }}
+
+    /* Slider - remove tom laranja e aplica paleta PayShield */
+    .stSlider {{
+        --primary-color: #445fd6 !important;
+    }}
+
+    .stSlider [role="slider"] {{
+        background-color: #445fd6 !important;
+        border-color: #445fd6 !important;
+    }}
+
+    .stSlider [data-testid="stThumbValue"] {{
+        color: #445fd6 !important;
+    }}
+
+    .stSlider [data-testid="stSliderTrack"] > div:first-child {{
+        background: linear-gradient(90deg, #5de0e6, #004aad) !important;
+    }}
+
+    .stSlider [data-testid="stTickBar"] {{
+        color: #445fd6 !important;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Exibir logo na barra lateral
+logo_path = os.path.join(BASE_DIR, "images", "rd_payshield_logo.png")
+if os.path.exists(logo_path):
+    st.sidebar.image(logo_path, width=200)
+
 # Seleção de Modelo na barra lateral
-st.sidebar.header("⚙️ Configurações do Modelo")
+st.sidebar.header("Configurações do Modelo")
 modelo_selecionado = st.sidebar.selectbox(
     "Selecione o Modelo de ML",
     ["Random Forest", "Decision Tree", "Gradient Boosting"]
@@ -20,8 +130,6 @@ mapa_modelos = {
     "Decision Tree": "decision_tree.pkl",
     "Gradient Boosting": "gradient_boosting.pkl"
 }
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 @st.cache_resource
 def carregar_modelo(nome_arquivo):
@@ -41,10 +149,10 @@ try:
 except Exception as e:
     st.sidebar.error(f"Erro ao carregar o modelo: {e}")
 
-st.title("🛡️ Simulador de Risco de Fraude")
+st.title("Simulador de Risco de Fraude")
 st.write("Insira os dados operacionais, cadastrais e de comportamento para avaliar o risco da transação.")
 
-st.subheader("📋 Dados da Transação, Cliente e Login")
+st.subheader("Dados da Transação, Cliente e Login")
 
 # Divisão da tela em 3 colunas para distribuir as entradas do usuário
 col1, col2, col3 = st.columns(3)
@@ -79,7 +187,7 @@ with col3:
     transaction_type = st.selectbox("Tipo de Transação", ["Payment", "Transfer", "Withdrawal"])
 
 st.markdown("---")
-st.subheader("🌐 Configurações de Rede/Segurança")
+st.subheader("Configurações de Rede/Segurança")
 col_net1, col_net2 = st.columns(2)
 
 with col_net1:
@@ -171,7 +279,7 @@ if st.button("Verificar Transação", type="primary"):
     # Converter para DataFrame do Pandas
     dados_para_prever = pd.DataFrame([dados_usuario])
 
-    # --- 🎯 SEQUÊNCIA EXATA SOLICITADA PELO SEU MODELO NO FIT ---
+    # --- SEQUÊNCIA EXATA SOLICITADA PELO SEU MODELO NO FIT ---
     colunas_ordem_correta = [
         'transaction_amount', 'account_age_days', 'transaction_hour', 'previous_failed_attempts',
         'avg_transaction_amount', 'is_international', 'ip_risk_score', 'login_attempts_last_24h',
@@ -195,9 +303,9 @@ if st.button("Verificar Transação", type="primary"):
         st.markdown("---")
 
         if predicao == 1:
-            st.error(f"🚨 **Alerta de Fraude!** Transação classificada como de ALTO RISCO. (Probabilidade: {probabilidade:.2%})")
+            st.error(f"**Alerta de Fraude!** Transação classificada como de ALTO RISCO. (Probabilidade: {probabilidade:.2%})")
         else:
-            st.success(f"✅ **Transação Segura.** Baixo risco detectado. (Probabilidade de fraude: {probabilidade:.2%})")
+            st.success(f"**Transação Segura.** Baixo risco detectado. (Probabilidade de fraude: {probabilidade:.2%})")
 
     except Exception as e:
         st.error(f"Erro ao processar predição: {e}")

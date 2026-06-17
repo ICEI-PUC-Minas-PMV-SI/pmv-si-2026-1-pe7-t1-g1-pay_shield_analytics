@@ -37,9 +37,10 @@ Este projeto tem como objetivo desenvolver um modelo de Inteligência Artificial
 
 ## Instruções de utilização
 
-Acesso em Produção (quando disponível)
-* URL: https://<seu-dominio>/...
-* Status: online/homologação
+### 🌐 Acesso ao sistema em produção
+
+- 🔗 **URL:** https://payshield.pnuneslabs.com.br/
+- 🟢 **Status:** Online (produção)
 
 # Código
 

@@ -8,7 +8,7 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 
 # ── Configuração da página ──────────────────────────────────────────────────
-st.set_page_config(page_title="Análise dos Modelos – PayShield", layout="wide")
+st.set_page_config(page_title="Análise dos Modelos - PayShield", layout="wide")
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -151,63 +151,6 @@ CORES_MODELOS = {
     "Gradient Boosting": "#6038d0",
 }
 
-# ── Colunas para feature importance (mesma ordem do treinamento) ─────────────
-FEATURE_NAMES = [
-    "transaction_amount", "account_age_days", "transaction_hour",
-    "previous_failed_attempts", "avg_transaction_amount", "is_international",
-    "ip_risk_score", "login_attempts_last_24h", "late_night_flag",
-    "hour_sin", "hour_cos", "international_night", "high_ip_risk",
-    "many_login_attempts", "risk_login", "login_failure_rate", "is_night",
-    "international_risk", "night_intl_risk",
-    "transaction_type_Payment", "transaction_type_Transfer", "transaction_type_Withdrawal",
-    "payment_mode_Card", "payment_mode_NetBanking", "payment_mode_UPI", "payment_mode_Wallet",
-    "device_type_Android", "device_type_Web", "device_type_iOS",
-    "device_location_Bangalore", "device_location_Chennai", "device_location_Delhi",
-    "device_location_Hyderabad", "device_location_Mumbai",
-    "period_of_day_madrugada", "period_of_day_manha", "period_of_day_noite", "period_of_day_tarde",
-]
-
-FEATURE_LABELS = {
-    "transaction_amount": "Valor da Transação",
-    "account_age_days": "Idade da Conta (dias)",
-    "transaction_hour": "Hora da Transação",
-    "previous_failed_attempts": "Tentativas de Login Falhas",
-    "avg_transaction_amount": "Média Histórica de Valor",
-    "is_international": "Transação Internacional",
-    "ip_risk_score": "Score de Risco do IP",
-    "login_attempts_last_24h": "Tentativas de Login 24h",
-    "late_night_flag": "Flag Madrugada",
-    "hour_sin": "Hora (seno cíclico)",
-    "hour_cos": "Hora (cosseno cíclico)",
-    "international_night": "Internacional + Madrugada",
-    "high_ip_risk": "IP de Alto Risco",
-    "many_login_attempts": "Muitas Tentativas de Login",
-    "risk_login": "Risco Combinado de Login",
-    "login_failure_rate": "Taxa de Falha de Login",
-    "is_night": "Período Noturno",
-    "international_risk": "Risco Internacional",
-    "night_intl_risk": "Risco Noturno Internacional",
-    "transaction_type_Payment": "Tipo: Pagamento",
-    "transaction_type_Transfer": "Tipo: Transferência",
-    "transaction_type_Withdrawal": "Tipo: Saque",
-    "payment_mode_Card": "Pagamento: Cartão",
-    "payment_mode_NetBanking": "Pagamento: Internet Banking",
-    "payment_mode_UPI": "Pagamento: UPI",
-    "payment_mode_Wallet": "Pagamento: Carteira Digital",
-    "device_type_Android": "Dispositivo: Android",
-    "device_type_Web": "Dispositivo: Web",
-    "device_type_iOS": "Dispositivo: iOS",
-    "device_location_Bangalore": "Cidade: Bangalore",
-    "device_location_Chennai": "Cidade: Chennai",
-    "device_location_Delhi": "Cidade: Delhi",
-    "device_location_Hyderabad": "Cidade: Hyderabad",
-    "device_location_Mumbai": "Cidade: Mumbai",
-    "period_of_day_madrugada": "Período: Madrugada",
-    "period_of_day_manha": "Período: Manhã",
-    "period_of_day_noite": "Período: Noite",
-    "period_of_day_tarde": "Período: Tarde",
-}
-
 # ── Cabeçalho ────────────────────────────────────────────────────────────────
 st.title("📊 Análise dos Modelos de IA")
 st.markdown(
@@ -216,7 +159,7 @@ st.markdown(
 )
 
 # ════════════════════════════════════════════════════════════════════════════
-# SEÇÃO 1 – VISÃO GERAL DO DATASET
+# SEÇÃO 1 - VISÃO GERAL DO DATASET
 # ════════════════════════════════════════════════════════════════════════════
 st.markdown('<div class="section-title">📦 Visão Geral do Dataset</div>', unsafe_allow_html=True)
 
@@ -263,7 +206,7 @@ with col_pie:
 
 with col_bar:
     # Distribuição por período do dia (dados aproximados do dataset)
-    periodos = ["Madrugada\n(0–5h)", "Manhã\n(6–11h)", "Tarde\n(12–17h)", "Noite\n(18–23h)"]
+    periodos = ["Madrugada\n(0-5h)", "Manhã\n(6-11h)", "Tarde\n(12-17h)", "Noite\n(18-23h)"]
     total_tx = [1120, 1980, 2280, 2120]
     fraude_tx = [95, 118, 141, 133]
 
@@ -288,7 +231,37 @@ with col_bar:
     st.plotly_chart(fig_bar, use_container_width=True)
 
 # ════════════════════════════════════════════════════════════════════════════
-# SEÇÃO 2 – COMPARAÇÃO DE MÉTRICAS
+# SEÇÃO 2 - VARIÁVEIS CRIADAS NA ENGENHARIA DE DADOS
+# ════════════════════════════════════════════════════════════════════════════
+st.markdown('<div class="section-title">🛠️ Variáveis Criadas na Engenharia de Dados</div>', unsafe_allow_html=True)
+
+st.markdown(
+    "As variáveis abaixo foram construídas a partir dos dados brutos para enriquecer a "
+    "representação do comportamento da transação e do usuário, capturando padrões temporais, "
+    "de risco e interações entre atributos."
+)
+
+variaveis_engenharia = [
+    ("period_of_day", "Categoria do período do dia (madrugada, manha, tarde, noite) com base na hora"),
+    ("late_night_flag", "Flag indicando transação na madrugada (0h às 5h)"),
+    ("hour_sin", "Codificação cíclica do horário da transação (seno)"),
+    ("hour_cos", "Codificação cíclica do horário da transação (cosseno)"),
+    ("international_night", "Interação indicando transações internacionais ocorridas na madrugada"),
+    ("high_amount_flag", "Flag indicando transação com valor acima do quantil 95% do dataset global (temporário)"),
+    ("high_ip_risk", "Flag indicando IP de alto risco (score > 0.8)"),
+    ("many_login_attempts", "Flag indicando mais de 5 tentativas de login nas últimas 24 horas"),
+    ("risk_login", "Produto entre tentativas de login e tentativas falhas anteriores"),
+    ("login_failure_rate", "Proporção de falhas de login em relação ao total de tentativas"),
+    ("is_night", "Flag indicando horário noturno (0h às 6h)"),
+    ("international_risk", "Produto entre o indicador de transação internacional e o score de risco do IP"),
+    ("night_intl_risk", "Interação indicando madrugada (0h-6h) + transação internacional"),
+]
+
+df_features = pd.DataFrame(variaveis_engenharia, columns=["Feature", "Descrição"])
+st.dataframe(df_features, use_container_width=True, hide_index=True)
+
+# ════════════════════════════════════════════════════════════════════════════
+# SEÇÃO 3 - COMPARAÇÃO DE MÉTRICAS
 # ════════════════════════════════════════════════════════════════════════════
 st.markdown('<div class="section-title">🏆 Comparação de Desempenho dos Modelos</div>', unsafe_allow_html=True)
 
@@ -372,7 +345,7 @@ with col_bar2:
     st.plotly_chart(fig_grouped, use_container_width=True)
 
 # ════════════════════════════════════════════════════════════════════════════
-# SEÇÃO 3 – MATRIZES DE CONFUSÃO
+# SEÇÃO 4 - MATRIZES DE CONFUSÃO
 # ════════════════════════════════════════════════════════════════════════════
 st.markdown('<div class="section-title">🔲 Matrizes de Confusão</div>', unsafe_allow_html=True)
 st.caption("Conjunto de teste (20% dos dados = ~1.500 transações). Limiar de decisão: 0,5.")
@@ -414,7 +387,7 @@ for col, (nome, m) in zip([col_cm1, col_cm2, col_cm3], METRICAS.items()):
         st.plotly_chart(fig, use_container_width=True)
 
 # ════════════════════════════════════════════════════════════════════════════
-# SEÇÃO 4 – CURVAS ROC
+# SEÇÃO 5 - CURVAS ROC
 # ════════════════════════════════════════════════════════════════════════════
 st.markdown('<div class="section-title">📈 Curvas ROC</div>', unsafe_allow_html=True)
 st.caption(
@@ -459,60 +432,65 @@ fig_roc.update_yaxes(showgrid=True, gridcolor="#e0e7ff")
 st.plotly_chart(fig_roc, use_container_width=True)
 
 # ════════════════════════════════════════════════════════════════════════════
-# SEÇÃO 5 – FEATURE IMPORTANCE
+# SEÇÃO 6 - ANÁLISE DE TRADE-OFFS DOS HIPERPARÂMETROS
 # ════════════════════════════════════════════════════════════════════════════
-st.markdown('<div class="section-title">🔍 Importância das Variáveis (Feature Importance)</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">⚖️ Análise de Trade-offs dos Hiperparâmetros</div>', unsafe_allow_html=True)
 
-modelo_fi_sel = st.selectbox(
-    "Selecione o modelo para visualizar a importância das variáveis:",
-    list(modelos.keys()) if modelos else list(METRICAS.keys()),
-    key="fi_selector",
+st.markdown(
+    "Os gráficos abaixo mostram como cada hiperparâmetro afeta overfitting, "
+    "qualidade preditiva e tempo de treino de cada modelo. Selecione o modelo para visualizar "
+    "a análise correspondente."
 )
 
-if modelos and modelo_fi_sel in modelos:
-    modelo_obj = modelos[modelo_fi_sel]
-    try:
-        importancias = modelo_obj.feature_importances_
-        n_feat = len(importancias)
-        nomes = FEATURE_NAMES[:n_feat]
-        labels = [FEATURE_LABELS.get(f, f) for f in nomes]
+modelo_trade_sel = st.selectbox(
+    "Selecione o modelo:",
+    ["Random Forest", "Árvore de Decisão", "Gradient Boosting"],
+    key="trade_selector",
+)
 
-        df_fi = pd.DataFrame({"feature": labels, "importancia": importancias})
-        df_fi = df_fi.sort_values("importancia", ascending=True).tail(15)
+DOCS_IMG_DIR = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), "docs", "img")
+trade_images = {
+    "Random Forest": os.path.join(DOCS_IMG_DIR, "trade_offs_random_forest.png"),
+    "Árvore de Decisão": os.path.join(DOCS_IMG_DIR, "trade_offs_decision_tree.png"),
+    "Gradient Boosting": os.path.join(DOCS_IMG_DIR, "trade_offs_gradient_boosting.png"),
+}
 
-        fig_fi = go.Figure(
-            go.Bar(
-                x=df_fi["importancia"],
-                y=df_fi["feature"],
-                orientation="h",
-                marker=dict(
-                    color=df_fi["importancia"],
-                    colorscale=[[0, "#08254b"], [0.5, "#445fd6"], [1, "#5de0e6"]],
-                    showscale=False,
-                ),
-                text=[f"{v:.4f}" for v in df_fi["importancia"]],
-                textposition="outside",
-            )
-        )
-        fig_fi.update_layout(
-            title=f"Top 15 Variáveis Mais Importantes — {modelo_fi_sel}",
-            xaxis_title="Importância Relativa",
-            yaxis_title="",
-            height=520,
-            margin=dict(t=50, b=10, l=200, r=60),
-            plot_bgcolor="rgba(248,250,255,1)",
-            paper_bgcolor="rgba(0,0,0,0)",
-        )
-        fig_fi.update_xaxes(showgrid=True, gridcolor="#e0e7ff")
-        st.plotly_chart(fig_fi, use_container_width=True)
-
-    except AttributeError:
-        st.warning(f"O modelo '{modelo_fi_sel}' não expõe `feature_importances_`.")
+trade_path = trade_images.get(modelo_trade_sel)
+if trade_path and os.path.exists(trade_path):
+    st.image(trade_path, use_container_width=True)
 else:
-    st.info("Modelos não encontrados no servidor. Verifique os arquivos `.pkl` na pasta `form/`.")
+    st.info(f"Imagem de trade-offs não encontrada para {modelo_trade_sel}.")
 
 # ════════════════════════════════════════════════════════════════════════════
-# SEÇÃO 6 – CONCLUSÃO / INSIGHTS
+# SEÇÃO 7 - CORRELAÇÃO DE PEARSON
+# ════════════════════════════════════════════════════════════════════════════
+st.markdown('<div class="section-title">🔗 Correlação de Pearson</div>', unsafe_allow_html=True)
+
+st.markdown(
+    "A correlação de Pearson mede a relação linear entre variáveis. À esquerda, a matriz "
+    "de correlação entre as variáveis preditivas (sem o alvo). À direita, a correlação de "
+    "cada variável com a variável alvo `fraud_label`."
+)
+
+col_pearson1, col_pearson2 = st.columns(2)
+
+pearson_features_path = os.path.join(DOCS_IMG_DIR, "cell072_51_correlação_de_pearson.png")
+pearson_target_path = os.path.join(DOCS_IMG_DIR, "cell072_51_correlação_de_pearson_total.png")
+
+with col_pearson1:
+    if os.path.exists(pearson_features_path):
+        st.image(pearson_features_path, use_container_width=True, caption="Correlação entre variáveis preditivas")
+    else:
+        st.info("Imagem de correlação entre features não encontrada.")
+
+with col_pearson2:
+    if os.path.exists(pearson_target_path):
+        st.image(pearson_target_path, use_container_width=True, caption="Correlação com a variável alvo fraud_label")
+    else:
+        st.info("Imagem de correlação com a variável alvo não encontrada.")
+
+# ════════════════════════════════════════════════════════════════════════════
+# SEÇÃO 8 - CONCLUSÃO / INSIGHTS
 # ════════════════════════════════════════════════════════════════════════════
 st.markdown('<div class="section-title">💡 Principais Achados</div>', unsafe_allow_html=True)
 
@@ -528,7 +506,7 @@ insights = [
     (
         "🌳 Melhor recall: Árvore de Decisão",
         "Com recall de 41%, a Árvore de Decisão foi o único modelo capaz de "
-        "identificar uma parcela relevante das fraudes — porém com precisão de apenas 7%, "
+        "identificar uma parcela relevante das fraudes - porém com precisão de apenas 7%, "
         "gerando muitos falsos positivos.",
     ),
     (

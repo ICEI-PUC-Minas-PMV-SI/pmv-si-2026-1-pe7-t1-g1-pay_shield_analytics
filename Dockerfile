@@ -35,6 +35,9 @@ RUN pip install --upgrade pip && pip install -r /app/requirements.txt
 # Copy the application source code (entire src/ directory)
 COPY src/ /app/src/
 
+# Copy documentation images used by the Streamlit analysis page
+COPY docs/img/ /app/docs/img/
+
 # Expose the default Streamlit port
 EXPOSE 8501
 

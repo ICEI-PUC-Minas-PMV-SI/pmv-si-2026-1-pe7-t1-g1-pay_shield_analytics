@@ -2,7 +2,7 @@
 
 🧹 **Limpeza de Dados**
 
-O dataset original contém 7.500 transações e não apresentou valores ausentes nem registros duplicados, conforme verificado na etapa de qualidade dos dados [(seção 2.4)](../src/code/paymment_fraud_notebook.ipynb). A etapa de limpeza concentrou-se na remoção de colunas redundantes e identificadoras sem poder preditivo: `transaction_id` (único por linha, sem padrão generalizável), `user_id` (removido para evitar memorização por usuário), e colunas derivadas de agregações que introduziriam data leakage (`user_failed_mean`, `user_failed_min`, `failed_deviation`, `user_rolling_avg`, `user_rolling_std`). Após essa remoção, o dataset ficou com 21 colunas. Em seguida, colunas com valores ausentes foram eliminadas via `dropna(axis=1)`.
+O dataset original contém 7.500 transações e não apresentou valores ausentes nem registros duplicados, conforme verificado na etapa de qualidade dos dados [(seção 2.4)](../src/code/paymment_fraud_notebook.ipynb). A etapa de limpeza concentrou-se na remoção de colunas redundantes e identificadoras sem poder preditivo: `transaction_id` (único por linha, sem padrão generalizável) e `user_id` (removido para evitar memorização por usuário). Após essa remoção, colunas com valores ausentes foram eliminadas via `dropna(axis=1)`.
 
 A detecção de outliers foi conduzida via IQR (padrão e exploratório). Optou-se pela manutenção dos outliers no dataset de modelagem, pois em detecção de fraude valores extremos são frequentemente os casos de maior interesse - removê-los comprometeria a capacidade do modelo de identificar exatamente os padrões anômalos que definem fraude.
 
@@ -10,22 +10,23 @@ A detecção de outliers foi conduzida via IQR (padrão e exploratório). Optou-
 
 Variáveis categóricas (`payment_mode`, `device_type`, `device_location`, `transaction_type`) foram convertidas para formato numérico via *one-hot encoding* (`pd.get_dummies`), gerando colunas binárias para cada categoria. Normalização e padronização não foram aplicadas: modelos baseados em árvores de decisão são invariantes à escala das features, e aplicar `StandardScaler` antes do split treino/teste introduziria data leakage - o scaler aprenderia a média e o desvio padrão do conjunto de teste.
 
-🧠 **Engenharia de Features**
-
-Foram criadas oito categorias de features derivadas para capturar padrões comportamentais que as variáveis brutas não expressam isoladamente:
+Foram criadas features derivadas para capturar padrões comportamentais e contextuais que as variáveis brutas não expressam isoladamente:
 
 | Feature | Descrição |
 |---|---|
-| `amount_vs_user_avg` | Desvio do valor da transação em relação à média histórica do usuário |
 | `risk_login` | Produto entre tentativas de login nas últimas 24h e histórico de falhas |
 | `login_failure_rate` | Taxa de falhas = `previous_failed_attempts / (login_attempts + 1)` |
-| `is_night` | Binária: 1 se a transação ocorreu entre 00h–05h |
+| `is_night` | Flag indicando horário noturno (0h às 6h) |
 | `international_risk` | Produto entre `is_international` e `ip_risk_score` |
-| `risk_interaction` | Binária: 1 se a transação é noturna E internacional simultaneamente |
-| `is_anomalous_amount` | Binária: 1 se o valor supera a média histórica do usuário por mais de 2 desvios padrão |
-| `amount_zscore_safe` | Z-score do valor da transação relativo ao histórico acumulado do usuário |
+| `night_intl_risk` | Interação indicando madrugada (0h-6h) + transação internacional |
+| `international_night` | Interação indicando transações internacionais ocorridas na madrugada (0h às 5h) |
+| `late_night_flag` | Flag indicando transação na madrugada (0h às 5h) |
+| `hour_sin` | Codificação cíclica do horário da transação (seno) |
+| `hour_cos` | Codificação cíclica do horário da transação (cosseno) |
+| `high_ip_risk` | Flag indicando IP de alto risco (score > 0.8) |
+| `many_login_attempts` | Flag indicando mais de 5 tentativas de login nas últimas 24 horas |
+| `period_of_day` | Categoria do período do dia (madrugada, manha, tarde, noite) com base na hora |
 
-Todas as features baseadas em histórico do usuário foram calculadas com `expanding()` sobre os dados ordenados por `(user_id, transaction_hour)`, garantindo que cada cálculo utilize apenas dados anteriores àquela transação e evitando vazamento de informação futura.
 
 💧 **Detecção de Vazamento de Dados**
 
@@ -128,7 +129,7 @@ Matrizes de correlação (Pearson e Spearman) e gráficos de dispersão para par
 Distribuição da variável alvo, taxa de fraude por segmento (tipo de dispositivo, modalidade de pagamento, localização) e análise de densidade do valor das transações por classe.
 
 **6. Engenharia de Features**
-Criação de features comportamentais, de risco composto, temporais, geográficas e de anomalia por histórico rolling, com uso de `expanding()` para garantir ausência de leakage temporal.
+Criação de features comportamentais, de risco composto, temporais e de login com base no contexto da transação em si.
 
 **7. Detecção de Vazamento de Dados**
 Verificação sistemática via correlação com o alvo, comparação de médias por classe e análise de padrões por usuário. Remoção de colunas identificadoras e derivadas do rótulo.

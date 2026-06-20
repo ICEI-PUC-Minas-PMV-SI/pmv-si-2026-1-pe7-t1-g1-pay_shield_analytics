@@ -42,8 +42,6 @@ Para garantir a generalização do modelo e a integridade da validação cruzada
   * `user_id`: Identificador do usuário. Causaria overfitting por identidade do cliente.
 * **Leakage por Quantil Global:**
   * `high_amount_flag`: Removida do conjunto direto porque o quantil de 95% foi calculado sobre todo o dataset (incluindo dados futuros/de teste).
-* **Outras Variáveis Redundantes / Removidas preventivamente:**
-  * Variáveis que envolviam estatísticas globais dos usuários ou codificações com target encoding calculado sobre todo o dataset (`user_failed_mean`, `user_failed_min`, `failed_deviation`, `user_rolling_avg`, `user_rolling_std`, `hour_risk_encoded`, `user_transaction_count`) foram explicitamente excluídas do pipeline para mitigar qualquer possibilidade de leakage.
 
 Após essas remoções, o conjunto de modelagem permaneceu com **25 colunas** (24 features + `fraud_label`).
 

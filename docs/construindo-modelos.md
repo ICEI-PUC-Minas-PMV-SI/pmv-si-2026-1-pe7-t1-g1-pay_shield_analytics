@@ -1,46 +1,50 @@
 # Preparação dos dados
-    
-O conjunto de dados original contém 7.500 transações e não apresentou valores ausentes nem registros duplicados, conforme verificado na etapa de qualidade dos dados [(Google Colab - seção 2.4)](../src/code/paymment_fraud_notebook.ipynb).
 
-Nesta etapa, não foram realizadas remoções de variáveis, uma vez que os identificadores e atributos originais foram mantidos temporariamente para viabilizar a etapa de engenharia de atributos e a construção de variáveis comportamentais.
+O conjunto de dados original contém **7.500 transações e 15 atributos** (incluindo a variável alvo `fraud_label`), não apresentando valores ausentes nem registros duplicados, conforme verificado na etapa de qualidade dos dados [(Google Colab - seção 2.4)](../src/code/paymment_fraud_notebook.ipynb).
 
-Assim, esta fase teve como objetivo a verificação da integridade dos dados e a preparação do conjunto para as etapas subsequentes. Após a engenharia de atributos, foi criada uma cópia do conjunto de dados (df_treated), utilizada nas etapas de limpeza, transformação e balanceamento, preservando-se o dataset original. Ao final desse processo, o conjunto utilizado na modelagem passou a conter 22 atributos.
+A preparação dos dados seguiu uma sequência estruturada para garantir a reprodutibilidade dos modelos e evitar o vazamento de dados (*data leakage*):
 
-As etapas de engenharia de atributos, limpeza e transformação dos dados são apresentadas em detalhes nas subseções a seguir.
+1. **Dataset Original:** Carga da base contendo 15 variáveis.
+2. **Engenharia de Features:** Criação de 13 novos atributos comportamentais e temporais no dataset.
+3. **Limpeza e Remoção de Leakage:** Eliminação de variáveis identificadoras e de atributos com potencial de vazamento de dados.
+4. **Codificação Categórica:** Conversão das colunas categóricas para dummies via `pd.get_dummies`.
+
+Ao final desse fluxo, o conjunto de dados resultante continha **25 colunas antes da codificação** (24 features + 1 target) e **38 colunas após a codificação** (37 features + 1 target). Esta mesma base final foi utilizada de forma consistente e idêntica para o treinamento e teste dos três modelos comparados (Random Forest, Árvore de Decisão e Gradient Boosting).
+
+As etapas detalhadas de engenharia de atributos, limpeza e transformação dos dados são apresentadas a seguir.
 
 ## Engenharia de Features
 
-Foram criadas variáveis adicionais com o objetivo de capturar padrões comportamentais associados a transações potencialmente fraudulentas:
+Foram criadas 13 variáveis adicionais com o objetivo de capturar padrões comportamentais associados a transações potencialmente fraudulentas:
 
 | Feature | Descrição |
 |---|---|
-| `risk_login` | Produto entre tentativas de login e falhas anteriores |
-| `login_failure_rate` | Proporção de falhas em relação ao total de tentativas |
-| `is_night` | Flag indicando transação entre 0h e 6h |
-| `international_risk` | Interação entre transação internacional e score de risco do IP |
-| `risk_interaction` | Interação entre horário noturno e transação internacional |
-| `night_intl_risk` | Combinação de madrugada + internacional (feature de maior poder discriminativo) |
+| `period_of_day` | Categoria do período do dia (madrugada, manha, tarde, noite) com base na hora |
+| `late_night_flag` | Flag indicando transação na madrugada (0h às 5h) |
+| `hour_sin` | Codificação cíclica do horário da transação (seno) |
+| `hour_cos` | Codificação cíclica do horário da transação (cosseno) |
+| `international_night` | Interação indicando transações internacionais ocorridas na madrugada |
+| `high_amount_flag` | Flag indicando transação com valor acima do quantil 95% do dataset global (temporário) |
+| `high_ip_risk` | Flag indicando IP de alto risco (score > 0.8) |
+| `many_login_attempts` | Flag indicando mais de 5 tentativas de login nas últimas 24 horas |
+| `risk_login` | Produto entre tentativas de login e tentativas falhas anteriores |
+| `login_failure_rate` | Proporção de falhas de login em relação ao total de tentativas |
+| `is_night` | Flag indicando horário noturno (0h às 6h) |
+| `international_risk` | Produto entre o indicador de transação internacional e o score de risco do IP |
+| `night_intl_risk` | Interação indicando madrugada (0h-6h) + transação internacional |
 
-Features com potencial de leakage foram avaliadas e removidas ou comentadas, conforme descrito na seção de limpeza.
+## Limpeza de Dados e Remoção de Leakage
 
-## Limpeza de Dados
+Para garantir a generalização do modelo e a integridade da validação cruzada, foram identificadas e removidas variáveis com potencial de **data leakage** (vazamento de dados) ou sem poder preditivo:
 
-O dataset utilizado é sintético e não apresenta valores ausentes ou duplicados, o que simplificou a etapa de limpeza. No entanto, foram identificadas e removidas variáveis com potencial de **data leakage** (vazamento de dados), isto é, atributos que incorporavam informações derivadas do rótulo alvo (fraud_label) ou calculadas com base no conjunto completo de dados, o que poderia resultar em métricas artificialmente otimizadas.
+* **Identificadores Únicos:**
+  * `transaction_id`: Identificador único da transação, sem poder generalizável.
+  * `user_id`: Identificador do usuário. Causaria overfitting por identidade do cliente.
+* **Leakage por Quantil Global:**
+  * `high_amount_flag`: Removida do conjunto direto porque o quantil de 95% foi calculado sobre todo o dataset (incluindo dados futuros/de teste).
 
-As variáveis removidas foram:
+Após essas remoções, o conjunto de modelagem permaneceu com **25 colunas** (24 features + `fraud_label`).
 
-| Feature | Motivo da Remoção |
-|---|---|
-| `transaction_id` | Identificador único, sem poder preditivo generalizável |
-| `user_id` | Identificador do usuário, causa overfitting por identidade |
-| `user_failed_mean` | Média global por usuário, inclui transações futuras |
-| `user_failed_min` | Mínimo global por usuário, inclui transações futuras |
-| `failed_deviation` | Derivada de estatísticas globais por usuário |
-| `user_rolling_avg` | Média expansiva sem garantia de ordenação temporal |
-| `user_rolling_std` | Desvio padrão expansivo, mesmo problema acima |
-| `hour_risk_encoded` | Target encoding calculado sobre dataset completo |
-| `high_amount_flag` | Quantil global calculado sobre todo o dataset |
-| `user_transaction_count` | `transform('count')` inclui transações futuras |
 
 ## Transformação de Dados
 
@@ -236,11 +240,13 @@ Os três modelos apresentaram resultados consistentemente próximos de um classi
 
 | Modelo | ROC-AUC (CV-5) | ROC-AUC (Teste) | Recall - Fraude | Precisão - Fraude | F1 - Fraude |
 |---|---|---|---|---|---|
-| Random Forest + SMOTE | ~0.50 ± 0.03 | ~0.50 | ~0.09 | ~0.06 | ~0.07 |
-| Árvore de Decisão + SMOTE | ~0.50 ± 0.03 | ~0.50 | ~0.09 | ~0.06 | ~0.07 |
-| Gradient Boosting + SMOTE | ~0.50 ± 0.03 | ~0.50 | ~0.09 | ~0.06 | ~0.07 |
+| Random Forest + SMOTE | 0.5084 ± 0.0379 | 0.4868 | 0.00 | 0.00 | 0.00 |
+| Árvore de Decisão + SMOTE | 0.5354 ± 0.0257 | 0.5270 | 0.41 | 0.07 | 0.12 |
+| Gradient Boosting + SMOTE | 0.5412 ± 0.0168 | 0.5011 | 0.01 | 0.07 | 0.02 |
 
-Um **ROC-AUC de 0.50** equivale a um classificador aleatório: a probabilidade atribuída pelo modelo a uma transação fraudulenta é estatisticamente equivalente à de uma transação legítima. Em termos operacionais, o ranking de risco gerado não oferece vantagem sobre uma ordenação aleatória para priorização de investigação.
+Analisando os valores exatos, o **Gradient Boosting** apresentou o maior ROC-AUC em CV-5 (0.5412), seguido da **Árvore de Decisão** (0.5354) e do **Random Forest** (0.5084). No conjunto de teste, a **Árvore de Decisão** foi o melhor modelo com ROC-AUC de 0.5270, enquanto o Random Forest ficou abaixo do aleatório (0.4868). A diferença absoluta entre o melhor e o pior modelo (≈0.033 em CV e ≈0.040 no teste) é estatisticamente muito pequena e operacionalmente irrelevante para implantação em produção.
+
+Um **ROC-AUC próximo de 0.50** equivale a um classificador aleatório: a probabilidade atribuída pelo modelo a uma transação fraudulenta é estatisticamente equivalente à de uma transação legítima. Em termos operacionais, o ranking de risco gerado não oferece vantagem sobre uma ordenação aleatória para priorização de investigação.
 
 A **consistência dos três algoritmos** em AUC ~0.50 é um resultado estatisticamente significativo. Algoritmos de famílias distintas (árvore única, bagging, boosting) possuem arquiteturas, hipóteses e biases diferentes. Quando todos concordam em um resultado, a confiança na conclusão aumenta substancialmente — apontando que a limitação não é algorítmica, mas sim estrutural nos dados.
 
@@ -287,7 +293,7 @@ O AUC médio de ~0.50 com baixo desvio entre os folds do CV-5 sugere que o resul
 
 - **Random Forest:** demonstrou resistência ao overfitting (gap treino/teste pequeno), confirmando que o bagging cumpre seu papel de regularização. A análise de importância de features revelou o ranking de variáveis mais informativas.
 
-- **Árvore de Decisão:** como modelo de única árvore, serviu como detector de ausência de padrões claros. Se houvesse regras simples e fortes, a DT as capturaria imediatamente. O fato de que DT e RF apresentaram AUC idênticos indica que o problema não é variância (overfitting), mas bias sistêmico (ausência de sinal).
+- **Árvore de Decisão:** como modelo de única árvore, serviu como detector de ausência de padrões claros. Se houvesse regras simples e fortes, a DT as capturaria imediatamente. O fato de que DT e RF apresentaram AUC similar indica que o problema não é variância (overfitting), mas bias sistêmico (ausência de sinal).
 
 - **Gradient Boosting:** sendo frequentemente considerado o estado da arte para dados tabulares, sua falha estabelece um limite superior. Se o GB — com sua maior capacidade expressiva — não consegue discriminar as classes, é improvável que qualquer outro modelo baseado nas mesmas features consiga.
 
@@ -297,66 +303,55 @@ O AUC médio de ~0.50 com baixo desvio entre os folds do CV-5 sugere que o resul
 
 ## Critérios de Comparação
 
-A seleção de um modelo para detecção de fraude não pode ser reduzida a uma única métrica. Foram avaliadas três dimensões fundamentais:
+A seleção do modelo mais adequado foi baseada primariamente na métrica de desempenho preditivo (**ROC-AUC**), que é a métrica principal de otimização definida para este projeto. Interpretabilidade e robustez são apresentadas como eixos complementares de contexto — importantes para guiar futuras iterações e decisões de implantação, mas sem poder de inverter o ranking definido pelo desempenho preditivo medido.
 
-| Dimensão | Descrição | Por que importa para fraude |
-|---|---|---|
-| **Métricas Preditivas** | ROC-AUC, recall, precisão, F1 | Medem a capacidade de distinguir transações fraudulentas de legítimas |
-| **Interpretabilidade** | Capacidade de explicar decisões | Reguladores exigem justificativas para bloqueios |
-| **Robustez** | Resistência a outliers, estabilidade de hiperparâmetros | Dados de fraude são ruidosos e evoluem rapidamente |
+## Ranking por ROC-AUC (Métrica Principal)
 
-## Análise por Dimensão
+| Ranking | Modelo | ROC-AUC (CV-5) | ROC-AUC (Teste) | Observação |
+|---|---|---|---|---|
+| 🥇 1º | Gradient Boosting + SMOTE | **0.5412 ± 0.0168** | 0.5011 | Melhor CV-5; menor variância entre folds |
+| 🥈 2º | Árvore de Decisão + SMOTE | 0.5354 ± 0.0257 | **0.5270** | Melhor generalização no teste |
+| 🥉 3º | Random Forest + SMOTE | 0.5084 ± 0.0379 | 0.4868 | Abaixo do aleatório no teste |
 
-### Métricas Preditivas
+> **Importante:** a diferença absoluta máxima entre os modelos é de ≈0.033 em CV e ≈0.040 no teste — valores estatisticamente irrelevantes em termos práticos. Todos os três modelos performam próximos de um classificador aleatório (AUC = 0.50), o que significa que nenhum deles oferece vantagem real em produção com as features disponíveis.
 
-| Modelo | Pontos | Justificativa |
-|---|---|---|
-| Gradient Boosting | **3** | Maior capacidade teórica de discriminação; extrai sinal residual que outros deixam passar |
-| Random Forest | **2** | Ensemble robusto com boa performance média; resistência natural ao overfitting |
-| Árvore de Decisão | **1** | Menor capacidade expressiva; sem mecanismo de agregação |
+## Eixos Complementares de Contexto
 
-> **Nota:** a atribuição de pontos reflete o potencial *esperado* com features adequadas, informada pela literatura. Neste dataset específico, todos apresentaram AUC ~0.50.
+As dimensões abaixo não alteram o ranking de ROC-AUC, mas informam decisões de implantação em cenários hipotéticos onde o sinal preditivo seja suficiente:
 
 ### Interpretabilidade
 
-| Modelo | Pontos | Justificativa |
+| Modelo | Avaliação | Justificativa |
 |---|---|---|
-| Árvore de Decisão | **3** | Regras lógicas explícitas, auditáveis por especialistas de negócio |
-| Random Forest | **2** | Rankings de importância de features; interpretável de forma macro |
-| Gradient Boosting | **1** | Menos interpretável; decisão é resultado de cadeia complexa de correções |
+| Árvore de Decisão | ⭐⭐⭐ Alta | Regras lógicas explícitas, auditáveis por especialistas de negócio |
+| Random Forest | ⭐⭐ Média | Rankings de importância de features; interpretável de forma macro |
+| Gradient Boosting | ⭐ Baixa | Decisão é resultado de cadeia complexa de correções sequenciais |
 
-### Robustez
+### Robustez Operacional
 
-| Modelo | Pontos | Justificativa |
+| Modelo | Avaliação | Justificativa |
 |---|---|---|
-| Random Forest | **3** | Bagging absorve ruído; estabilidade alta a hiperparâmetros |
-| Gradient Boosting | **2** | Regularização via `subsample` e `min_samples_leaf`; mas sensível a outliers |
-| Árvore de Decisão | **1** | Sem agregação; estrutura muda drasticamente com pequenas alterações |
-
-## Pontuação Consolidada
-
-| Modelo | Métricas | Interpretabilidade | Robustez | **Total** |
-|---|---|---|---|---|
-| Random Forest | 2 | 2 | 3 | **7** |
-| Gradient Boosting | 3 | 1 | 2 | **6** |
-| Árvore de Decisão | 1 | 3 | 1 | **5** |
+| Random Forest | ⭐⭐⭐ Alta | Bagging absorve ruído; estabilidade alta a hiperparâmetros |
+| Gradient Boosting | ⭐⭐ Média | Regularização via `subsample` e `min_samples_leaf`; sensível a outliers |
+| Árvore de Decisão | ⭐ Baixa | Sem agregação; estrutura pode mudar drasticamente com pequenas alterações |
 
 ## Recomendação por Cenário
 
-**1. Sistema de Aprovação em Tempo Real**
+**1. Dataset Atual — Decisão imediata**
+- **Recomendado:** Nenhum dos três modelos em produção
+- **Justificativa:** o consenso de AUC ~0.50 em três algoritmos de arquiteturas distintas (bagging, boosting, única árvore) indica que as features disponíveis não contêm sinal preditivo suficiente. A prioridade é o enriquecimento das features ou coleta de novas variáveis comportamentais.
+
+**2. Cenário hipotético com features enriquecidas — Sistema de Aprovação em Tempo Real**
 - **Recomendado:** Árvore de Decisão
 - **Justificativa:** predição em microssegundos com consumo mínimo de memória; interpretabilidade imediata para justificativas em tempo real
 
-**2. Sistema de Análise de Risco Batch**
+**3. Cenário hipotético com features enriquecidas — Análise de Risco Batch**
 - **Recomendado:** Gradient Boosting
-- **Justificativa:** maior capacidade de extrair padrões sutis; tempo de predição menos crítico em processamento noturno
+- **Justificativa:** maior capacidade expressiva para extrair padrões sutis; tempo de predição menos crítico em processamento noturno
 
-**3. Sistema Híbrido — Produção com Auditoria Frequente**
+**4. Cenário hipotético com features enriquecidas — Sistema Híbrido com Auditoria Frequente**
 - **Recomendado:** Random Forest
-- **Justificativa:** melhor equilíbrio geral; robustez reduz necessidade de intervenção manual; importância de features fornece insights acionáveis
-
-**4. Para o Dataset Atual**
-- **Recomendado:** Nenhum dos três modelos em produção com as features atuais
-- **Justificativa:** o consenso dos três algoritmos (AUC ~0.50) indica que as features disponíveis não contêm sinal preditivo suficiente. A prioridade é o enriquecimento das features ou coleta de novas variáveis comportamentais.
+- **Justificativa:** melhor equilíbrio entre robustez operacional e explicabilidade macro; importância de features fornece insights acionáveis para evolução contínua do modelo
 
 > Observação: todo o código fonte utilizado está disponível na pasta `src`, permitindo reproduzir todas as análises realizadas.
+

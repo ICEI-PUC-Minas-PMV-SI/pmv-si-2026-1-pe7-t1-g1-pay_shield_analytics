@@ -1,6 +1,6 @@
 # 🛡️ Digital Payment Fraud Detection
 
-Este repositório contém o código para análise e detecção de fraude em transações digitais, migrado do Google Colab para execução local. O projeto utiliza um dataset com 129.667 transações e 29 atributos para identificar padrões de comportamento fraudulento.
+Este repositório contém o código para análise e detecção de fraude em transações digitais, migrado do Google Colab para execução local. O projeto utiliza um dataset com **7.500 transações e 15 atributos originais** para comparar três algoritmos supervisionados de classificação binária (Random Forest, Árvore de Decisão e Gradient Boosting) na identificação de padrões de comportamento fraudulento.
 
 ## 📋 Pré-requisitos
 
@@ -57,4 +57,4 @@ Para facilitar a configuração do projeto, disponibilizamos um script de automa
 
 ---
 
-Projeto focado em análise exploratória e identificação de outliers em pagamentos digitais.
+Projeto focado em modelagem preditiva supervisionada para detecção de fraude em pagamentos digitais, comparando três algoritmos de classificação com SMOTE e validação cruzada estratificada (Etapa 4).

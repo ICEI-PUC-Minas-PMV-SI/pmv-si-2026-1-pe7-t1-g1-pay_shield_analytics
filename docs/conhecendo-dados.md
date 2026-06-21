@@ -168,16 +168,6 @@ A análise foi realizada como etapa exploratória complementar à visualização
 
 ![Boxplot Outliers Numeric](../docs/img/boxplot_outliers_numeric.png)
 
-#### 🔎 Análise de Outliers Segmentada por Contexto (Payment Mode & Type)
-
-Esta análise detalha como as variáveis de desvio financeiro (`amount_deviation` e `amount_ratio`) se comportam dentro de nichos específicos de operação. Em vez de uma média global, o "corte" do outlier agora respeita o comportamento típico de cada canal de transação.
-
-A análise estatística de detecção de outliers via método IQR ($k=0.5$) evidenciou que as variáveis de desvio (`amount_deviation` e `amount_ratio`) apresentam um comportamento anômalo mais acentuado na classe de fraude (36,19%) em comparação às transações legítimas (23,10%). Embora o desvio de valor demonstre capacidade de separação — com uma incidência de outliers aproximadamente 13 pontos percentuais superior em casos de fraude — a presença de 23% de anomalias em transações verídicas sugere um alto potencial de ruído. Além disso, a paridade quase exata entre as métricas de deviation e ratio ratifica a existência de multicolinearidade, indicando redundância no uso simultâneo de ambos os atributos. Em suma, as variáveis capturam a natureza "explosiva" dos valores fraudulentos, mas a sobreposição de comportamentos atípicos legítimos exige que o modelo integre estas features a outros contextos (como modo de pagamento ou horário) para mitigar falsos positivos e refinar a precisão da classificação.
-
-![Boxplot Outliers Por Feature](../docs/img/boxplot_outliers_por_feature.png)
-
----
-
 #### 📊 Análise Visual das Variáveis Numéricas
 
 A seguir, são apresentados os histogramas e boxplots das variáveis numéricas do dataset. Cada gráfico permite observar a distribuição, detectar outliers e identificar padrões importantes para análise de fraude.
@@ -451,24 +441,6 @@ Por outro lado, a variável alvo fraud_label apresenta correlações próximas d
 
 ---
 
-## 📈 Ranking de Transações com Maior Desvio
-
-Listagem das transações com maior desvio positivo em relação à média do usuário. Esses registros são candidatos primários a análise de anomalia.
-
-| user_id | transaction_amount | amount_vs_user_avg |
-|---------|--------------------|--------------------|
-| U2829   | 48120.15           | 28486.104000       |
-| U1171   | 47516.45           | 28177.693333       |
-| U9588   | 49383.10           | 28084.088000       |
-| U7031   | 48304.07           | 27377.556667       |
-| U9838   | 44854.91           | 27038.396667       |
-| U7401   | 48448.77           | 26966.560000       |
-| U7117   | 48110.52           | 26692.890000       |
-| U6902   | 46332.94           | 26190.643333       |
-| U8855   | 42385.00           | 26010.413333       |
-| U9872   | 49728.48           | 25865.566667       |
-
----
 
 ## 🔎 Resumo Executivo dos Achados
 
